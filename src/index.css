@@ -1,4 +1,38 @@
 @import "tailwindcss";
-@plugin "daisyui" {
-  themes: light --default, dark --prefersdark;
+
+@plugin "daisyui";
+
+@plugin "daisyui/theme" {
+  name: "light";
+  default: true;
+
+  --color-primary: #d96c4e; /* Earthy Terracotta */
+
+  --color-accent: #fbbf24; /* Golden Amber */
+
+  --color-base-100: #fefbf3; /* Warm Cream */
+
+  --color-base-content: #383838; /* Dark Charcoal */
+
+  --color-secondary: #4a2c2a; /* Rich Brown */
+
+  --color-primary-content: #fefbf3; /* Warm Cream (Text on Terracotta) */
+  --color-secondary-content: #fefbf3; /* Warm Cream (Text on Rich Brown) */
+  --color-accent-content: #383838; /* Dark Charcoal (Text on Golden Amber) */
+
+  --color-base-200: #f4efe7; /* For Card/Modal backgrounds */
+  --color-base-300: #e8e2d9; /* For Borders / Dividers */
+}
+
+.custom-gradient {
+  background: linear-gradient(90deg, #d96c4e, #fbbf2480);
+}
+.custom-gradient:hover {
+  background: linear-gradient(90deg, #fbbf2480, #d96c4e);
+}
+
+.text-gradient {
+  background: linear-gradient(45deg, #d96c4e, #fbbf24);
+  background-clip: text;
+  color: transparent;
 }

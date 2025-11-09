@@ -9,7 +9,7 @@ const MainLayout = () => {
       <header>
         <Navbar />
       </header>
-      <main>
+      <main className="bg-[#FEFBF3] pt-16">
         <Outlet />
       </main>
       <footer>

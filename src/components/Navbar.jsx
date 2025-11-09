@@ -2,6 +2,7 @@ import React from "react";
 import { FaLeaf } from "react-icons/fa";
 import { Link, NavLink } from "react-router";
 import logo from "../assets/TasteTribe_Logo.png";
+import Button from "./Button";
 
 const Navbar = () => {
   const links = (
@@ -16,11 +17,11 @@ const Navbar = () => {
   );
 
   return (
-    <div className="fixed z-10 w-full bg-[#FEFBF3] text-[#383838]">
+    <div className="fixed z-10 w-full bg-[#fbbf2420] ">
       <div className="navbar container  mx-auto  text-white">
         <div className="navbar-start">
           <div className="dropdown">
-            <label tabIndex={0} className="btn btn-ghost lg:hidden">
+            <label tabIndex={0} className="btn  custom-gradient lg:hidden">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-5 w-5"
@@ -38,21 +39,21 @@ const Navbar = () => {
             </label>
             <ul
               tabIndex={0}
-              className="navLinks menu menu-sm dropdown-content mt-3 z-1 p-2 shadow  bg-linear-to-b from-[#1a2419] to-[#151a14] rounded-box w-52 text-[#383838]"
+              className="navLinks menu menu-sm dropdown-content mt-3 z-1 p-2 shadow  bg-linear-to-br from-[#d96c4e] to-[#fbbf2490] rounded-box w-52 text-primary-content"
             >
               {links}
             </ul>
           </div>
           <Link
             to="/"
-            className="flex items-center text-[#383838] normal-case text-xl animate__animated animate__fadeInLeft"
+            className="flex items-center text-primary normal-case text-xl animate__animated animate__fadeInLeft"
           >
-            <img src={logo} alt="logo" className="w-10" />
-            TasteTribe
+            <img src={logo} alt="logo" className="w-10 " />
+            <span className="font-bold text-2xl text-gradient">TasteTribe</span>
           </Link>
         </div>
         <div className="navbar-center hidden lg:flex animate__animated animate__fadeInDown">
-          <ul className="navLinks menu menu-horizontal px-1 text-[#383838]">
+          <ul className="navLinks menu menu-horizontal px-1 text-base-content">
             {links}
           </ul>
         </div>
@@ -86,11 +87,8 @@ const Navbar = () => {
             </div>
           ) : ( */}
           <div className="animate__animated animate__fadeInRight flex">
-            <Link
-              to="/auth"
-              className="btn btn-outline text-white bg-[#D96C4E] mr-2"
-            >
-              Login
+            <Link to="/auth">
+              <Button>Login</Button>
             </Link>
           </div>
           {/* )} */}
