@@ -44,6 +44,7 @@ const Login = () => {
 
   return (
     <div>
+      <title>Authentication - TasteTribe</title>
       <div>
         <form onSubmit={handleSubmit(handleLogIn)} className="space-y-4">
           <div>
@@ -74,7 +75,7 @@ const Login = () => {
               {...register("password", { required: "Password is required" })}
             />
             <span
-              className="cursor-pointer right-5 bottom-3 absolute z-10"
+              className="cursor-pointer right-5 bottom-3 absolute z-5"
               onClick={() => setShowPassword(!showPassword)}
             >
               {showPassword ? <FaEyeSlash /> : <FaEye />}

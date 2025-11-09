@@ -29,7 +29,7 @@
 }
 
 .custom-gradient {
-  background: linear-gradient(90deg, #d96c4e, #fbbf2480);
+  background: linear-gradient(90deg, #d96c4e, #fbbf2490);
 }
 .custom-gradient:hover {
   background: linear-gradient(90deg, #fbbf2480, #d96c4e);
