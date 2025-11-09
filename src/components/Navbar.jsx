@@ -3,8 +3,21 @@ import { FaLeaf } from "react-icons/fa";
 import { Link, NavLink } from "react-router";
 import logo from "../assets/TasteTribe_Logo.png";
 import Button from "./Button";
+import useAuth from "../hooks/useAuth";
+import toast from "react-hot-toast";
+import LogoutBtn from "./LogoutBtn";
 
 const Navbar = () => {
+  const { user, logOut } = useAuth();
+
+  const handleLogOut = () => {
+    logOut()
+      .then(() => {
+        toast.success("Logged Out Successfully");
+      })
+      .catch((error) => toast.error(error.message));
+  };
+
   const links = (
     <>
       <li>
@@ -59,7 +72,7 @@ const Navbar = () => {
         </div>
 
         <div className="navbar-end">
-          {/* {user ? (
+          {user ? (
             <div className="dropdown dropdown-end">
               <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
                 <div className="w-10 rounded-full">
@@ -68,30 +81,39 @@ const Navbar = () => {
               </label>
               <ul
                 tabIndex={0}
-                className="menu menu-sm dropdown-content bg-linear-to-b from-[#1a2419] to-[#151a14] mt-1 z-1 p-2 shadow  rounded-b-xl w-52 text-white "
+                className="menu menu-sm dropdown-content bg-linear-to-br from-[#d96c4e] to-[#fbbf2490] mt-1 z-1 p-2 shadow  rounded-xl w-52 text-primary-content "
               >
                 <li>
-                  <Link
-                    to="/profile"
-                    className="justify-between hover:bg-[#7fb069]"
-                  >
-                    {user.displayName}
+                  <Link className="justify-between hover:bg-linear-to-r from-[#d96c4e] to-[#fbbf2490]">
+                    Add Review
                   </Link>
                 </li>
                 <li>
-                  <button onClick={handleLogOut} className="hover:bg-[#7fb069]">
-                    Logout
-                  </button>
+                  <Link className="justify-between hover:bg-linear-to-r from-[#d96c4e] to-[#fbbf2490]">
+                    My Review
+                  </Link>
                 </li>
+                <li>
+                  <Link className="justify-between hover:bg-linear-to-r from-[#d96c4e] to-[#fbbf2490]">
+                    My Favorites
+                  </Link>
+                </li>
+
+                <button
+                  onClick={handleLogOut}
+                  className="hover:bg-linear-to-r from-[#d96c4e] to-[#fbbf2490]"
+                >
+                  <LogoutBtn />
+                </button>
               </ul>
             </div>
-          ) : ( */}
-          <div className="animate__animated animate__fadeInRight flex">
-            <Link to="/auth">
-              <Button>Login</Button>
-            </Link>
-          </div>
-          {/* )} */}
+          ) : (
+            <div className="animate__animated animate__fadeInRight flex">
+              <Link to="/auth">
+                <Button>Login</Button>
+              </Link>
+            </div>
+          )}
         </div>
       </div>
     </div>

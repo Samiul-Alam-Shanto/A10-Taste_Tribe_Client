@@ -1,5 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 @import "tailwindcss";
-
 @plugin "daisyui";
 
 @plugin "daisyui/theme" {
@@ -24,6 +24,10 @@
   --color-base-300: #e8e2d9; /* For Borders / Dividers */
 }
 
+* {
+  font-family: "Poppins", sans-serif;
+}
+
 .custom-gradient {
   background: linear-gradient(90deg, #d96c4e, #fbbf2480);
 }
@@ -35,4 +39,8 @@
   background: linear-gradient(45deg, #d96c4e, #fbbf24);
   background-clip: text;
   color: transparent;
+}
+
+.navLinks > li > a.active {
+  @apply bg-linear-to-r from-[#d96c4e] to-[#fbbf24] text-primary-content;
 }

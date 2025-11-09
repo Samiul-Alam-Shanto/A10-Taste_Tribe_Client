@@ -1,26 +1,70 @@
 import React from "react";
-import { Link } from "react-router";
+import { useNavigate } from "react-router";
 import Button from "../../components/Button";
+import useAuth from "../../hooks/useAuth";
+import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
+import { FaGoogle } from "react-icons/fa";
 
 const Register = () => {
-  const handleSignUp = (e) => {
-    e.preventDefault();
+  const { createUser, updateUserProfile, googleSignIn } = useAuth();
+  const navigate = useNavigate();
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm();
+
+  const password = watch("password");
+
+  const handleSignUp = (data) => {
+    const { name, email, photoURL, password } = data;
+    createUser(email, password)
+      .then(() => {
+        updateUserProfile(name, photoURL)
+          .then(() => {
+            navigate("/");
+          })
+          .catch((error) => {
+            toast.error(error.message);
+          });
+      })
+      .catch((error) => {
+        toast.error(error.message);
+      });
   };
+
+  const handleGoogleSignIn = () => {
+    googleSignIn()
+      .then(() => {
+        navigate("/");
+      })
+      .catch((error) => {
+        toast.error(error.message);
+      });
+  };
+
   return (
     <div>
-      {" "}
       <div>
-        <form onSubmit={handleSignUp} className="space-y-4">
+        <form onSubmit={handleSubmit(handleSignUp)} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Username
+              Name
             </label>
             <input
               type="text"
-              placeholder="Choose a username"
-              className="input  w-full focus:ring-2 focus:ring-[#d96c4e]"
+              placeholder="Enter your name"
+              className="input w-full focus:ring-2 focus:ring-[#d96c4e]"
+              {...register("name", { required: "Name is required" })}
             />
+            {errors.name && (
+              <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>
+            )}
           </div>
+
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Photo URL
@@ -28,9 +72,16 @@ const Register = () => {
             <input
               type="url"
               placeholder="Enter your photo URL"
-              className="input  w-full focus:ring-2 focus:ring-[#d96c4e]"
+              className="input w-full focus:ring-2 focus:ring-[#d96c4e]"
+              {...register("photoURL", { required: "Photo URL is required" })}
             />
+            {errors.photoURL && (
+              <p className="text-red-500 text-xs mt-1">
+                {errors.photoURL.message}
+              </p>
+            )}
           </div>
+
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Email address
@@ -38,9 +89,22 @@ const Register = () => {
             <input
               type="email"
               placeholder="Enter your email"
-              className="input  w-full focus:ring-2 focus:ring-[#d96c4e]"
+              className="input w-full focus:ring-2 focus:ring-[#d96c4e]"
+              {...register("email", {
+                required: "Email is required",
+                pattern: {
+                  value: /^\S+@\S+$/i,
+                  message: "Invalid email address",
+                },
+              })}
             />
+            {errors.email && (
+              <p className="text-red-500 text-xs mt-1">
+                {errors.email.message}
+              </p>
+            )}
           </div>
+
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Password
@@ -48,55 +112,59 @@ const Register = () => {
             <input
               type="password"
               placeholder="Enter your password"
-              className="input   w-full focus:ring-2 focus:ring-[#d96c4e]"
+              className="input w-full focus:ring-2 focus:ring-[#d96c4e]"
+              {...register("password", {
+                required: "Password is required",
+                minLength: {
+                  value: 6,
+                  message: "Password must be at least 6 characters",
+                },
+                pattern: {
+                  value: /(?=.*[A-Z])(?=.*[a-z])/,
+                  message:
+                    "Password must include one uppercase and lowercase letter",
+                },
+              })}
             />
+            {errors.password && (
+              <p className="text-red-500 text-xs mt-1">
+                {errors.password.message}
+              </p>
+            )}
           </div>
+
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Repeat password
+              Confirm Password
             </label>
             <input
               type="password"
               placeholder="Repeat your password"
-              className="input  w-full focus:ring-2 focus:ring-[#d96c4e]"
+              className="input w-full focus:ring-2 focus:ring-[#d96c4e]"
+              {...register("confirmPassword", {
+                required: "Please confirm your password",
+                validate: (value) =>
+                  value === password || "The passwords do not match",
+              })}
             />
+            {errors.confirmPassword && (
+              <p className="text-red-500 text-xs mt-1">
+                {errors.confirmPassword.message}
+              </p>
+            )}
           </div>
+
           <Button>Sign Up</Button>
         </form>
       </div>
-      <div className=" text-center">
+
+      <div className="text-center">
         <div className="divider text-base-content">OR</div>
         <button
-          // onClick={handleGoogleLogIn}
+          onClick={handleGoogleSignIn}
           className="btn bg-primary text-primary-content w-full border-[#e5e5e5]"
         >
-          <svg
-            aria-label="Google logo"
-            width="16"
-            height="16"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 512 512"
-          >
-            <g>
-              <path d="m0 0H512V512H0" fill="#fff"></path>
-              <path
-                fill="#34a853"
-                d="M153 292c30 82 118 95 171 60h62v48A192 192 0 0190 341"
-              ></path>
-              <path
-                fill="#4285f4"
-                d="m386 400a140 175 0 0053-179H260v74h102q-7 37-38 57"
-              ></path>
-              <path
-                fill="#fbbc02"
-                d="m90 341a208 200 0 010-171l63 49q-12 37 0 73"
-              ></path>
-              <path
-                fill="#ea4335"
-                d="m153 219c22-69 116-109 179-50l55-54c-78-75-230-72-297 55"
-              ></path>
-            </g>
-          </svg>
+          <FaGoogle />
           SignUp with Google
         </button>
       </div>

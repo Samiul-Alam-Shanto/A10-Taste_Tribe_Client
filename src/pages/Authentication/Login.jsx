@@ -1,19 +1,51 @@
 import React, { useState } from "react";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { Link } from "react-router";
+import { FaEye, FaEyeSlash, FaGoogle } from "react-icons/fa";
+import { Link, useLocation, useNavigate } from "react-router";
 import Button from "../../components/Button";
+import useAuth from "../../hooks/useAuth";
+import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const { signIn, googleSignIn } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  const handleLogIn = (e) => {
-    e.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
+  const handleLogIn = (data) => {
+    const { email, password } = data;
+
+    signIn(email, password)
+      .then(() => {
+        navigate(`${location.state ? location.state : "/"}`);
+        toast.success("SignIn  Successful");
+      })
+      .catch((error) => {
+        toast.error(error.message);
+      });
+  };
+
+  const handleGoogleSignIn = () => {
+    googleSignIn()
+      .then(() => {
+        navigate(`${location.state ? location.state : "/"}`);
+        toast.success("SignIn with Google Successfully");
+      })
+      .catch((error) => {
+        toast.error(error.message);
+      });
   };
 
   return (
     <div>
       <div>
-        <form onSubmit={handleLogIn} className="space-y-4">
+        <form onSubmit={handleSubmit(handleLogIn)} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-base-content mb-1">
               Email address
@@ -22,8 +54,15 @@ const Login = () => {
               type="email"
               placeholder="Enter your email"
               className="input w-full focus:ring-2 focus:ring-[#d96c4e]"
+              {...register("email", { required: "Email is required" })}
             />
+            {errors.email && (
+              <p className="text-red-500 text-xs mt-1">
+                {errors.email.message}
+              </p>
+            )}
           </div>
+
           <div className="relative mb-0">
             <label className="block text-sm font-medium text-base-content mb-1">
               Password
@@ -32,14 +71,21 @@ const Login = () => {
               type={showPassword ? "text" : "password"}
               placeholder="Enter your password"
               className="input w-full focus:ring-2 focus:ring-[#d96c4e]"
+              {...register("password", { required: "Password is required" })}
             />
             <span
-              className="cursor-pointer right-5 bottom-3  absolute z-10"
+              className="cursor-pointer right-5 bottom-3 absolute z-10"
               onClick={() => setShowPassword(!showPassword)}
             >
               {showPassword ? <FaEyeSlash /> : <FaEye />}
             </span>
+            {errors.password && (
+              <p className="text-red-500 text-xs mt-1">
+                {errors.password.message}
+              </p>
+            )}
           </div>
+
           <div>
             <Link className="text-sm text-base-content hover:text-primary">
               Forgot Password?
@@ -48,39 +94,14 @@ const Login = () => {
           <Button>Login</Button>
         </form>
       </div>
-      <div className=" text-center">
+
+      <div className="text-center">
         <div className="divider text-secondary">OR</div>
         <button
-          // onClick={handleGoogleLogIn}
-          className="btn custom-gradient  text-primary-content w-full border-base-300"
+          onClick={handleGoogleSignIn}
+          className="btn custom-gradient text-primary-content w-full border-base-300"
         >
-          <svg
-            aria-label="Google logo"
-            width="16"
-            height="16"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 512 512"
-          >
-            <g>
-              <path d="m0 0H512V512H0" fill="#fff"></path>
-              <path
-                fill="#34a853"
-                d="M153 292c30 82 118 95 171 60h62v48A192 192 0 0190 341"
-              ></path>
-              <path
-                fill="#4285f4"
-                d="m386 400a140 175 0 0053-179H260v74h102q-7 37-38 57"
-              ></path>
-              <path
-                fill="#fbbc02"
-                d="m90 341a208 200 0 010-171l63 49q-12 37 0 73"
-              ></path>
-              <path
-                fill="#ea4335"
-                d="m153 219c22-69 116-109 179-50l55-54c-78-75-230-72-297 55"
-              ></path>
-            </g>
-          </svg>
+          <FaGoogle />
           Login with Google
         </button>
       </div>
