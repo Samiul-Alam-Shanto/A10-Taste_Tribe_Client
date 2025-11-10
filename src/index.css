@@ -44,3 +44,28 @@
 .navLinks > li > a.active {
   @apply bg-linear-to-r from-[#d96c4e] to-[#fbbf24] text-primary-content;
 }
+
+@keyframes ripple {
+  from {
+    transform: scale(0);
+    opacity: 1;
+  }
+  to {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+/* 2. Create a class to apply the animation */
+.animate-ripple {
+  animation: ripple 1.5s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+}
+
+/* 3. Create helper classes for the delays */
+.animation-delay-250ms {
+  animation-delay: 250ms;
+}
+
+.animation-delay-500ms {
+  animation-delay: 500ms;
+}

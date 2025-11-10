@@ -26,6 +26,9 @@ const Navbar = () => {
       <li>
         <NavLink to="/auth">LogIn</NavLink>
       </li>
+      <li>
+        <NavLink to="/add-review">Add Review</NavLink>
+      </li>
     </>
   );
 
@@ -52,7 +55,7 @@ const Navbar = () => {
             </label>
             <ul
               tabIndex={0}
-              className="navLinks menu menu-sm dropdown-content mt-3 z-1 p-2 shadow  bg-linear-to-br from-[#d96c4e] to-[#fbbf2490] rounded-box w-52 text-primary-content"
+              className="navLinks menu menu-sm dropdown-content mt-3 z-1 space-y-1  p-2 shadow  bg-linear-to-br from-[#d96c4e] to-[#fbbf2490] rounded-box w-52 text-primary-content"
             >
               {links}
             </ul>
@@ -66,7 +69,7 @@ const Navbar = () => {
           </Link>
         </div>
         <div className="navbar-center hidden lg:flex animate__animated animate__fadeInDown">
-          <ul className="navLinks menu menu-horizontal px-1 text-base-content">
+          <ul className="navLinks menu menu-horizontal space-x-1 px-1 text-base-content">
             {links}
           </ul>
         </div>

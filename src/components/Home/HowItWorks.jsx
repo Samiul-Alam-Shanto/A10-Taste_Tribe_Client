@@ -3,7 +3,7 @@ import { FaSearch, FaPencilAlt, FaUsers } from "react-icons/fa";
 
 const HowItWorks = () => {
   return (
-    <div
+    <section
       id="how-it-works"
       className="my-16 lg:my-24 container mx-auto px-4 text-center"
     >
@@ -58,7 +58,7 @@ const HowItWorks = () => {
           </p>
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 
