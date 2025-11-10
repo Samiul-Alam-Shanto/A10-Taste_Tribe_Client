@@ -48,7 +48,7 @@ const slides = [
 
 const HeroSlider = () => {
   return (
-    <section className="h-[90vh] mb-16">
+    <section className="h-[650px] container mx-auto mt-1 mb-16">
       <Swiper
         spaceBetween={30}
         centeredSlides={true}

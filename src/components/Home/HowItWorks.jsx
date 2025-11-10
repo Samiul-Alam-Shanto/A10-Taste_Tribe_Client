@@ -3,10 +3,7 @@ import { FaSearch, FaPencilAlt, FaUsers } from "react-icons/fa";
 
 const HowItWorks = () => {
   return (
-    <section
-      id="how-it-works"
-      className="my-16 lg:my-24 container mx-auto px-4 text-center"
-    >
+    <section className="my-16 lg:my-24 container mx-auto px-4 text-center">
       <h2 className="text-4xl font-bold text-secondary mb-4">How It Works</h2>
       <p className="max-w-2xl mx-auto text-base-content/80 mb-12">
         Joining our foodie community is as easy as one, two, three.

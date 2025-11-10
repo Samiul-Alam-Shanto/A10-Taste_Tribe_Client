@@ -35,6 +35,7 @@ const StyledWrapper = styled.div`
     gap: 4px;
     padding: 10px 36px;
     border: none;
+    white-space: nowrap;
     font-size: 16px;
     background: linear-gradient(
       90deg,
