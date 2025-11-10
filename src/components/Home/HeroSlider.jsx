@@ -69,7 +69,7 @@ const HeroSlider = () => {
               style={{ backgroundImage: `url(${slide.image})` }}
             >
               <div className="absolute  inset-0 bg-linear-to-r from-black/90 to-black/30"></div>
-              <div className="absolute flex items-center h-full left-0 lg:left-3 top-0 text-white">
+              <div className="absolute flex items-center h-full left-0 lg:left-5 top-0 text-white">
                 <div className="space-y-7 pl-4 md:pl-24 w-full md:w-3/d4 lg:w-3/5">
                   <h1
                     className="text-5xl lg:text-6xl font-bold"
