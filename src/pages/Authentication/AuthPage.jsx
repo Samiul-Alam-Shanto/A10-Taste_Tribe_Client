@@ -45,10 +45,10 @@ const AuthPage = () => {
               role="tab"
               className="tab text-sm font-medium text-primary
                 [--tab-border-color:transparent] 
-                checked:[--tab-border-color:#a51b5c]
+                checked:[--tab-border-color:#d96c4e]
                 checked:bg-linear-to-l from-[#d96c4e] to-[#fbbf2490]
                 checked:text-white
-                transition-all duration-300 rounded-xl"
+                transition-all duration-300 rounded-xl "
               aria-label="Sign up"
             />
             <div

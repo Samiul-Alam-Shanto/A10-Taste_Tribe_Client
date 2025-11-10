@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FaEye, FaEyeSlash, FaGoogle } from "react-icons/fa";
 import { Link, useLocation, useNavigate } from "react-router";
-import Button from "../../components/Button";
+import AuthBtn from "../../components/Buttons/AuthBtn";
 import useAuth from "../../hooks/useAuth";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
@@ -92,7 +92,7 @@ const Login = () => {
               Forgot Password?
             </Link>
           </div>
-          <Button>Login</Button>
+          <AuthBtn>Login</AuthBtn>
         </form>
       </div>
 
@@ -100,7 +100,7 @@ const Login = () => {
         <div className="divider text-secondary">OR</div>
         <button
           onClick={handleGoogleSignIn}
-          className="btn custom-gradient text-primary-content w-full border-base-300"
+          className="btn custom-gradient text-primary-content rounded-xl w-full border-base-300"
         >
           <FaGoogle />
           Login with Google

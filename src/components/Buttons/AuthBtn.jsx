@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-const Button = ({ children }) => {
+const AuthBtn = ({ children }) => {
   return (
     <StyledWrapper>
       <button className="cssButtons-io-button">
@@ -32,7 +32,7 @@ const StyledWrapper = styled.div`
     font-family: inherit;
     padding: 0.35em;
     padding-left: 1.2em;
-    font-size: 17px;
+    font-size: 14px;
     font-weight: 500;
     border-radius: 0.9em;
     border: none;
@@ -82,4 +82,4 @@ const StyledWrapper = styled.div`
   }
 `;
 
-export default Button;
+export default AuthBtn;

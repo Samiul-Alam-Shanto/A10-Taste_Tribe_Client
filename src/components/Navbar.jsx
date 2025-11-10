@@ -2,10 +2,10 @@ import React from "react";
 import { FaLeaf } from "react-icons/fa";
 import { Link, NavLink } from "react-router";
 import logo from "../assets/TasteTribe_Logo.png";
-import Button from "./Button";
+import AuthBtn from "./Buttons/AuthBtn";
 import useAuth from "../hooks/useAuth";
 import toast from "react-hot-toast";
-import LogoutBtn from "./LogoutBtn";
+import LogoutBtn from "./Buttons/LogoutBtn";
 
 const Navbar = () => {
   const { user, logOut } = useAuth();
@@ -99,18 +99,18 @@ const Navbar = () => {
                   </Link>
                 </li>
 
-                <button
+                <div
                   onClick={handleLogOut}
                   className="hover:bg-linear-to-r from-[#d96c4e] to-[#fbbf2490]"
                 >
                   <LogoutBtn />
-                </button>
+                </div>
               </ul>
             </div>
           ) : (
             <div className="animate__animated animate__fadeInRight flex">
               <Link to="/auth">
-                <Button>Login</Button>
+                <AuthBtn>Login</AuthBtn>
               </Link>
             </div>
           )}

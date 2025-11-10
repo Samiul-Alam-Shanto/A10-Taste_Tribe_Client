@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router";
-import Button from "../../components/Button";
+import AuthBtn from "../../components/Buttons/AuthBtn";
 import useAuth from "../../hooks/useAuth";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
@@ -154,7 +154,7 @@ const Register = () => {
             )}
           </div>
 
-          <Button>Sign Up</Button>
+          <AuthBtn>Sign Up</AuthBtn>
         </form>
       </div>
 
@@ -162,7 +162,7 @@ const Register = () => {
         <div className="divider text-base-content">OR</div>
         <button
           onClick={handleGoogleSignIn}
-          className="btn bg-primary text-primary-content w-full border-[#e5e5e5]"
+          className="btn custom-gradient rounded-xl text-primary-content w-full border-[#e5e5e5]"
         >
           <FaGoogle />
           SignUp with Google
