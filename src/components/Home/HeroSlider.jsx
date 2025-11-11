@@ -6,6 +6,7 @@ import "swiper/css/pagination";
 import "swiper/css/navigation";
 import { Autoplay, Pagination, Navigation } from "swiper/modules";
 import GeneralBtn from "../Buttons/GeneralBtn";
+import { Slide } from "react-awesome-reveal";
 
 const slides = [
   {
@@ -48,48 +49,52 @@ const slides = [
 
 const HeroSlider = () => {
   return (
-    <section className="h-[650px] container mx-auto mt-1 mb-16">
-      <Swiper
-        spaceBetween={30}
-        centeredSlides={true}
-        autoplay={{
-          delay: 3500,
-          disableOnInteraction: false,
-        }}
-        pagination={{
-          clickable: true,
-        }}
-        modules={[Autoplay, Pagination, Navigation]}
-        className="mySwiper h-full rounded-lg"
-      >
-        {slides.map((slide, index) => (
-          <SwiperSlide key={index}>
-            <div
-              className="bg-cover bg-center  h-full w-full relative"
-              style={{ backgroundImage: `url(${slide.image})` }}
-            >
-              <div className="absolute  inset-0 bg-linear-to-r from-black/90 to-black/30"></div>
-              <div className="absolute flex items-center h-full left-0 lg:left-5 top-0 text-white">
-                <div className="space-y-7 pl-4 md:pl-24 w-full md:w-3/d4 lg:w-3/5">
-                  <h1
-                    className="text-5xl lg:text-6xl font-bold"
-                    style={{ textShadow: "2px 2px 8px rgba(0,0,0,0.7)" }}
-                  >
-                    {slide.headline}
-                  </h1>
-                  <p className="text-lg">{slide.subhead}</p>
-                  <div className="flex flex-wrap gap-4">
-                    <GeneralBtn>
-                      <Link to={slide.button1_link}>{slide.button1_text}</Link>
-                    </GeneralBtn>
+    <Slide direction="down" triggerOnce duration={1200}>
+      <section className="h-[650px] container mx-auto mt-1 mb-16">
+        <Swiper
+          spaceBetween={30}
+          centeredSlides={true}
+          autoplay={{
+            delay: 3500,
+            disableOnInteraction: false,
+          }}
+          pagination={{
+            clickable: true,
+          }}
+          modules={[Autoplay, Pagination, Navigation]}
+          className="mySwiper h-full rounded-lg"
+        >
+          {slides.map((slide, index) => (
+            <SwiperSlide key={index}>
+              <div
+                className="bg-cover bg-center  h-full w-full relative"
+                style={{ backgroundImage: `url(${slide.image})` }}
+              >
+                <div className="absolute  inset-0 bg-linear-to-r from-black/90 to-black/30"></div>
+                <div className="absolute flex items-center h-full left-0 lg:left-5 top-0 text-white">
+                  <div className="space-y-7 pl-4 md:pl-24 w-full md:w-3/d4 lg:w-3/5">
+                    <h1
+                      className="text-5xl lg:text-6xl font-bold"
+                      style={{ textShadow: "2px 2px 8px rgba(0,0,0,0.7)" }}
+                    >
+                      {slide.headline}
+                    </h1>
+                    <p className="text-lg">{slide.subhead}</p>
+                    <div className="flex flex-wrap gap-4">
+                      <GeneralBtn>
+                        <Link to={slide.button1_link}>
+                          {slide.button1_text}
+                        </Link>
+                      </GeneralBtn>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </SwiperSlide>
-        ))}
-      </Swiper>
-    </section>
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      </section>
+    </Slide>
   );
 };
 

@@ -12,12 +12,11 @@ import { Link } from "react-router";
 
 const StarRating = ({ rating }) => {
   const totalStars = 5;
-  const filledStars = Math.round(rating);
 
   return (
     <div className="flex items-center gap-1">
       {[...Array(totalStars)].map((_, index) =>
-        index < filledStars ? (
+        index < totalStars ? (
           <FaStar key={index} className="text-amber-400" />
         ) : (
           <FaRegStar key={index} className="text-gray-300" />

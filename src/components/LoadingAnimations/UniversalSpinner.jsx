@@ -1,6 +1,6 @@
 import React from "react";
 
-const Loading = () => {
+const UniversalSpinner = () => {
   return (
     <div
       className="flex flex-col justify-center items-center min-h-[calc(100vh-300px)] bg-base-100"
@@ -28,4 +28,4 @@ const Loading = () => {
   );
 };
 
-export default Loading;
+export default UniversalSpinner;

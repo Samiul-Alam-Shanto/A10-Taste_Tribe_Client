@@ -33,7 +33,7 @@ const StyledWrapper = styled.div`
     align-items: center;
     justify-content: center;
     gap: 4px;
-    padding: 10px 36px;
+    padding: 9px 36px;
     border: none;
     white-space: nowrap;
     font-size: 16px;
