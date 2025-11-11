@@ -13,7 +13,7 @@ const FeaturedReviews = () => {
   const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ["featured_reviews"],
     queryFn: async () => {
-      const res = await axiosPublic.get("/featured-products");
+      const res = await axiosPublic.get("/featured-reviews");
       // console.log(res);
       return res.data;
     },

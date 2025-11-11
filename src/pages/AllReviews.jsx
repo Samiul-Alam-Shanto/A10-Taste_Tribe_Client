@@ -4,7 +4,7 @@ import useAxiosPublic from "../hooks/Axios/useAxiosPublic";
 import UniversalSpinner from "../components/LoadingAnimations/UniversalSpinner";
 import ReviewCard from "../components/ReviewCard";
 import GeneralBtn from "../components/Buttons/GeneralBtn";
-import { Roll } from "react-awesome-reveal";
+import { Zoom } from "react-awesome-reveal";
 
 const AllReviews = () => {
   const axiosPublic = useAxiosPublic();
@@ -28,8 +28,8 @@ const AllReviews = () => {
   if (isLoading) return <UniversalSpinner />;
 
   return (
-    <Roll triggerOnce duration={800}>
-      <section className="container mx-auto my-12 px-4">
+    <Zoom triggerOnce duration={800}>
+      <section className="container mx-auto my-12 lg:my-20 px-4">
         <title>All Reviews - TasteTribe</title>
         <div className="text-center mb-12">
           <h2 className="text-4xl font-bold text-secondary">
@@ -79,7 +79,7 @@ const AllReviews = () => {
           </div>
         )}
       </section>
-    </Roll>
+    </Zoom>
   );
 };
 

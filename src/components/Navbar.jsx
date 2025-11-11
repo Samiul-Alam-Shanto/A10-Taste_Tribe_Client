@@ -91,7 +91,10 @@ const Navbar = () => {
                   className="menu menu-sm dropdown-content bg-linear-to-br from-[#d96c4e] to-[#fbbf2490] mt-1 z-1 p-2 shadow  rounded-xl w-52 text-primary-content "
                 >
                   <li>
-                    <Link className="justify-between hover:bg-linear-to-r from-[#d96c4e] to-[#fbbf2490]">
+                    <Link
+                      to="/add-review"
+                      className="justify-between hover:bg-linear-to-r from-[#d96c4e] to-[#fbbf2490]"
+                    >
                       Add Review
                     </Link>
                   </li>

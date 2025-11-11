@@ -3,6 +3,9 @@ import { useForm } from "react-hook-form";
 import { FaStar } from "react-icons/fa";
 import AuthBtn from "../components/Buttons/AuthBtn";
 import useAuth from "../hooks/useAuth";
+import useAxiosPublic from "../hooks/Axios/useAxiosPublic";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import Swal from "sweetalert2";
 
 const StarRating = ({ register, setValue, watch }) => {
   const [hover, setHover] = useState(0);
@@ -19,7 +22,6 @@ const StarRating = ({ register, setValue, watch }) => {
               value={ratingValue}
               {...register("rating", { required: true })}
               className="hidden"
-              onClick={() => setValue("rating", ratingValue)}
             />
             <FaStar
               className="cursor-pointer transition-colors"
@@ -27,6 +29,7 @@ const StarRating = ({ register, setValue, watch }) => {
               size={30}
               onMouseEnter={() => setHover(ratingValue)}
               onMouseLeave={() => setHover(0)}
+              onClick={() => setValue("rating", ratingValue)}
             />
           </label>
         );
@@ -37,25 +40,43 @@ const StarRating = ({ register, setValue, watch }) => {
 
 const AddReview = () => {
   const { user } = useAuth();
+  const axiosPublic = useAxiosPublic();
+  const queryClient = useQueryClient();
   const {
     register,
     handleSubmit,
     setValue,
+    reset,
     watch,
     formState: { errors },
   } = useForm();
 
+  const { mutate } = useMutation({
+    mutationFn: async (newReview) => {
+      const res = await axiosPublic.post("/reviews", newReview);
+      return res.data;
+    },
+    onSuccess: () => {
+      Swal.fire("✅ Review added successfully!");
+      reset();
+    },
+    onError: (err) => {
+      Swal.fire("❌ Error adding review:", err);
+    },
+  });
+
   const onSubmit = (data) => {
-    console.log("Form Data:", data);
+    mutate(data);
   };
 
   return (
-    <section className="py-12 bg-base-100">
+    <section className="py-12 lg:py-20 bg-base-100">
       <title>Add Review - TasteTribe</title>
       <div className="container mx-auto px-4">
         <div className="flex flex-col lg:flex-row bg-base-100 rounded-2xl shadow-xl overflow-hidden">
           {/* Left Side */}
           <div
+            data-aos="flip-right"
             className="w-full relative lg:w-2/5 p-8 bg-cover bg-center h-[400px] lg:h-auto"
             style={{
               backgroundImage:
@@ -72,7 +93,7 @@ const AddReview = () => {
           </div>
 
           {/* Right Side */}
-          <div className="w-full lg:w-3/5 p-8 lg:p-12">
+          <div data-aos="flip-left" className="w-full lg:w-3/5 p-8 lg:p-12">
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
@@ -173,21 +194,21 @@ const AddReview = () => {
                   <input
                     type="text"
                     defaultValue={user.displayName}
-                    {...register("userName")}
+                    {...register("reviewerName")}
                     readOnly
                     className="input w-full bg-base-200 cursor-not-allowed"
                   />
                   <input
                     type="email"
                     defaultValue={user.email}
-                    {...register("userEmail")}
+                    {...register("reviewerEmail")}
                     readOnly
                     className="input w-full bg-base-200 cursor-not-allowed"
                   />
                   <input
                     type="text"
                     defaultValue={user.photoURL}
-                    {...register("userPhoto")}
+                    {...register("reviewerPhoto")}
                     readOnly
                     className="input w-full bg-base-200 cursor-not-allowed"
                   />

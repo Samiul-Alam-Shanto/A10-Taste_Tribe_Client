@@ -23,9 +23,7 @@ const StarRating = ({ rating }) => {
           <FaRegStar key={index} className="text-gray-300" />
         )
       )}
-      <span className="text-base-content/90 font-semibold ml-1">
-        {rating.toFixed(1)}
-      </span>
+      <span className="text-base-content/90 font-semibold ml-1">{rating}</span>
     </div>
   );
 };
@@ -45,7 +43,8 @@ const ReviewDetails = () => {
   if (isLoading) return <UniversalSpinner />;
 
   return (
-    <section className="py-12 lg:py-20 bg-base-100">
+    <section data-aos="flip-down" className="py-12 lg:py-20 bg-base-100">
+      <title>{`${data.foodName} Details - TasteTribe`}</title>
       <div className="container mx-auto px-4">
         <div className="card lg:card-side bg-base-200 shadow-2xl rounded-lg overflow-hidden">
           {/* Left Column*/}
