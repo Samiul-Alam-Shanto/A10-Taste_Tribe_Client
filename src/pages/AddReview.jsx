@@ -6,6 +6,7 @@ import useAuth from "../hooks/useAuth";
 import useAxiosPublic from "../hooks/Axios/useAxiosPublic";
 import { useMutation } from "@tanstack/react-query";
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router";
 
 const StarRating = ({ register, setValue, watch }) => {
   const [hover, setHover] = useState(0);
@@ -41,6 +42,7 @@ const StarRating = ({ register, setValue, watch }) => {
 const AddReview = () => {
   const { user } = useAuth();
   const axiosPublic = useAxiosPublic();
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -56,8 +58,16 @@ const AddReview = () => {
       return res.data;
     },
     onSuccess: () => {
-      Swal.fire("✅ Review added successfully!");
       reset();
+      Swal.fire({
+        title: "✅ Review added successfully!",
+        confirmButtonText: "Go to All Reviews",
+        confirmButtonColor: "#d96c4e",
+      }).then((res) => {
+        if (res.isConfirmed) {
+          navigate("/all-reviews");
+        }
+      });
     },
     onError: (err) => {
       Swal.fire("❌ Error adding review:", err);

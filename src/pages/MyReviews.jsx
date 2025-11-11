@@ -1,16 +1,18 @@
 import React from "react";
 import useAuth from "../hooks/useAuth";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import useAxiosPublic from "../hooks/Axios/useAxiosPublic";
 import { Link } from "react-router";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import GeneralBtn from "../components/Buttons/GeneralBtn";
 import UniversalSpinner from "../components/LoadingAnimations/UniversalSpinner";
 import ComponentError from "./Errors/ComponentError";
+import Swal from "sweetalert2";
 
 const MyReviews = () => {
   const { user } = useAuth();
   const axiosPublic = useAxiosPublic();
+  const queryClient = useQueryClient();
 
   const {
     data = [],
@@ -27,11 +29,55 @@ const MyReviews = () => {
     },
   });
 
+  const { mutate } = useMutation({
+    mutationFn: async (id) => {
+      const res = await axiosPublic.delete(`/reviews/${id}`);
+      console.log(res, res.data);
+      return res.data;
+    },
+    onSuccess: (res) => {
+      if (res.deletedCount > 0) {
+        Swal.fire({
+          icon: "success",
+          title: "Deleted!",
+          text: "Your review has been deleted successfully.",
+          timer: 1500,
+          showConfirmButton: false,
+        });
+        queryClient.invalidateQueries(["my_reviews"]);
+      }
+    },
+    onError: () => {
+      Swal.fire({
+        icon: "error",
+        title: "Error!",
+        text: "Failed to delete the review.",
+      });
+    },
+  });
+
+  const handleDelete = (id) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        mutate(id);
+      }
+    });
+  };
+
   if (isLoading) return <UniversalSpinner />;
   if (isError) return <ComponentError error={error} refetch={refetch} />;
 
   return (
-    <div className="container mx-auto my-12 px-4">
+    <div className="container mx-auto my-12 lg:my-20 px-4">
+      <title>My Reviews - TasteTribe</title>
       <div className="text-center mb-12">
         <h2 className="text-4xl font-bold text-secondary">My Reviews</h2>
         <p className="mt-2 text-base-content/80">
@@ -80,15 +126,12 @@ const MyReviews = () => {
                   <td>{review.restaurantName}</td>
                   <td>{new Date(review.postedDate).toLocaleDateString()}</td>
                   <td className="space-x-2">
-                    <Link
-                      className="btn btn-ghost btn-sm text-secondary"
-                      aria-label="Edit review"
-                    >
+                    <Link className="btn btn-ghost btn-sm text-secondary">
                       <FaEdit />
                     </Link>
                     <button
+                      onClick={() => handleDelete(review._id)}
                       className="btn btn-ghost btn-sm text-red-500"
-                      aria-label="Delete review"
                     >
                       <FaTrash />
                     </button>
