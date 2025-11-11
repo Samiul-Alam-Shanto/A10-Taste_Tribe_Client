@@ -4,6 +4,7 @@ import useAxiosPublic from "../hooks/Axios/useAxiosPublic";
 import UniversalSpinner from "../components/LoadingAnimations/UniversalSpinner";
 import ReviewCard from "../components/ReviewCard";
 import GeneralBtn from "../components/Buttons/GeneralBtn";
+import { Roll } from "react-awesome-reveal";
 
 const AllReviews = () => {
   const axiosPublic = useAxiosPublic();
@@ -27,53 +28,58 @@ const AllReviews = () => {
   if (isLoading) return <UniversalSpinner />;
 
   return (
-    <div className="container mx-auto my-12 px-4">
-      <div className="text-center mb-12">
-        <h2 className="text-4xl font-bold text-secondary">All Food Reviews</h2>
-        <p className="mt-2 text-base-content/80">
-          Find your next favorite meal from our community's collection.
-        </p>
-      </div>
-
-      <form
-        onSubmit={handleSearch}
-        className="flex justify-center items-center gap-2 mb-12"
-      >
-        <input
-          type="text"
-          onChange={(e) => setSearch(e.target.value)}
-          value={search}
-          placeholder="Search by food name..."
-          className="input bg-white  w-full max-w-sm focus:ring-2 focus:ring-[#d96c4e]"
-          disabled={isFetching}
-        />
-        <GeneralBtn>
-          <div type="submit" disabled={isFetching}>
-            <span>Search</span>
-          </div>
-        </GeneralBtn>
-      </form>
-      <div
-        className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 transition-opacity duration-300 ${
-          isFetching ? "opacity-50" : "opacity-100"
-        }`}
-      >
-        {data?.map((singleReview) => (
-          <ReviewCard key={singleReview._id} singleReview={singleReview} />
-        ))}
-      </div>
-
-      {data?.length === 0 && !isFetching && (
-        <div className="text-center my-8">
-          <p className="text-xl text-base-content/70">
-            No reviews found for "{searchText}".
-          </p>
-          <p className="mt-2 text-base-content/90">
-            Try searching for something else!
+    <Roll triggerOnce duration={800}>
+      <section className="container mx-auto my-12 px-4">
+        <title>All Reviews - TasteTribe</title>
+        <div className="text-center mb-12">
+          <h2 className="text-4xl font-bold text-secondary">
+            All Food Reviews
+          </h2>
+          <p className="mt-2 text-base-content/80">
+            Find your next favorite meal from our community's collection.
           </p>
         </div>
-      )}
-    </div>
+
+        <form
+          onSubmit={handleSearch}
+          className="flex justify-center items-center gap-2 mb-12"
+        >
+          <input
+            type="text"
+            onChange={(e) => setSearch(e.target.value)}
+            value={search}
+            placeholder="Search by food name..."
+            className="input bg-white  w-full max-w-sm focus:ring-2 focus:ring-[#d96c4e]"
+            disabled={isFetching}
+          />
+          <GeneralBtn>
+            <div type="submit" disabled={isFetching}>
+              <span>Search</span>
+            </div>
+          </GeneralBtn>
+        </form>
+        <div
+          className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 transition-opacity duration-300 ${
+            isFetching ? "opacity-50" : "opacity-100"
+          }`}
+        >
+          {data?.map((singleReview) => (
+            <ReviewCard key={singleReview._id} singleReview={singleReview} />
+          ))}
+        </div>
+
+        {data?.length === 0 && !isFetching && (
+          <div className="text-center my-8">
+            <p className="text-xl text-base-content/70">
+              No reviews found for "{searchText}".
+            </p>
+            <p className="mt-2 text-base-content/90">
+              Try searching for something else!
+            </p>
+          </div>
+        )}
+      </section>
+    </Roll>
   );
 };
 

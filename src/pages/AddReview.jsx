@@ -51,6 +51,7 @@ const AddReview = () => {
 
   return (
     <section className="py-12 bg-base-100">
+      <title>Add Review - TasteTribe</title>
       <div className="container mx-auto px-4">
         <div className="flex flex-col lg:flex-row bg-base-100 rounded-2xl shadow-xl overflow-hidden">
           {/* Left Side */}
