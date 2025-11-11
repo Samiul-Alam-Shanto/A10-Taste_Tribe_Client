@@ -30,6 +30,13 @@ const Navbar = () => {
       <li>
         <NavLink to="/add-review">Add Review</NavLink>
       </li>
+      {user && (
+        <>
+          <li>
+            <NavLink to="/my-reviews">My Review</NavLink>
+          </li>
+        </>
+      )}
     </>
   );
 

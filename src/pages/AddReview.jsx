@@ -4,7 +4,7 @@ import { FaStar } from "react-icons/fa";
 import AuthBtn from "../components/Buttons/AuthBtn";
 import useAuth from "../hooks/useAuth";
 import useAxiosPublic from "../hooks/Axios/useAxiosPublic";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import Swal from "sweetalert2";
 
 const StarRating = ({ register, setValue, watch }) => {
@@ -41,7 +41,6 @@ const StarRating = ({ register, setValue, watch }) => {
 const AddReview = () => {
   const { user } = useAuth();
   const axiosPublic = useAxiosPublic();
-  const queryClient = useQueryClient();
   const {
     register,
     handleSubmit,
