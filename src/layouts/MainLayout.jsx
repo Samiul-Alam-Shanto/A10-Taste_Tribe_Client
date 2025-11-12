@@ -1,9 +1,10 @@
-import React, { useEffect } from "react";
-import { Outlet } from "react-router";
+import React, { useEffect, useState } from "react";
+import { Outlet, useLocation } from "react-router";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import UniversalSpinner from "../components/LoadingAnimations/UniversalSpinner";
 
 const MainLayout = () => {
   useEffect(() => {
@@ -14,13 +15,24 @@ const MainLayout = () => {
     });
   }, []);
 
+  const location = useLocation();
+  const [isRouting, setIsRouting] = useState(false);
+
+  useEffect(() => {
+    setIsRouting(true);
+    const timeout = setTimeout(() => {
+      setIsRouting(false);
+    }, 150);
+    return () => clearTimeout(timeout);
+  }, [location]);
+
   return (
     <div>
       <header>
         <Navbar />
       </header>
       <main className="bg-[#FEFBF3] pt-16 min-h-[80vh]">
-        <Outlet />
+        {isRouting ? <UniversalSpinner /> : <Outlet />}
       </main>
       <footer>
         <Footer />

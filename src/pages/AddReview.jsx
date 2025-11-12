@@ -151,6 +151,11 @@ const AddReview = () => {
                     {...register("restaurantName", { required: true })}
                     className="input w-full focus:ring-2 focus:ring-[#d96c4e]"
                   />
+                  {errors.restaurantName && (
+                    <p className="text-red-500 text-sm mt-1">
+                      Restaurant Name is required
+                    </p>
+                  )}
                 </div>
 
                 <div>
@@ -163,6 +168,11 @@ const AddReview = () => {
                     {...register("location", { required: true })}
                     className="input w-full focus:ring-2 focus:ring-[#d96c4e]"
                   />
+                  {errors.location && (
+                    <p className="text-red-500 text-sm mt-1">
+                      Restaurant Location is required
+                    </p>
+                  )}
                 </div>
               </div>
 
@@ -191,6 +201,11 @@ const AddReview = () => {
                   {...register("reviewText", { required: true })}
                   className="textarea w-full h-32 focus:ring-2 focus:ring-[#d96c4e]"
                 ></textarea>
+                {errors.reviewText && (
+                  <p className="text-red-500 text-sm mt-1">
+                    Review Text is required
+                  </p>
+                )}
               </div>
 
               <div className="divider"></div>

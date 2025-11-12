@@ -1,16 +1,18 @@
 import React from "react";
 import useAuth from "../hooks/useAuth";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import useAxiosPublic from "../hooks/Axios/useAxiosPublic";
 import UniversalSpinner from "../components/LoadingAnimations/UniversalSpinner";
 import ComponentError from "./Errors/ComponentError";
 import { FaTrash } from "react-icons/fa";
 import { Link } from "react-router";
 import GeneralBtn from "../components/Buttons/GeneralBtn";
+import Swal from "sweetalert2";
 
 const MyFavorites = () => {
   const { user } = useAuth();
   const axiosPublic = useAxiosPublic();
+  const queryClient = useQueryClient();
 
   const {
     data = [],
@@ -27,6 +29,48 @@ const MyFavorites = () => {
       return res.data;
     },
   });
+
+  const { mutate } = useMutation({
+    mutationFn: async (id) => {
+      const result = await axiosPublic.delete(`/favorite-reviews/${id}`);
+      return result.data;
+    },
+    onSuccess: (res) => {
+      if (res.deletedCount > 0) {
+        Swal.fire({
+          icon: "success",
+          title: "Deleted!",
+          text: "Your review has been deleted successfully.",
+          timer: 1500,
+          showConfirmButton: false,
+        });
+        queryClient.invalidateQueries(["favorites"]);
+      }
+    },
+    onError: () => {
+      Swal.fire({
+        icon: "error",
+        title: "Error!",
+        text: "Failed to delete the review.",
+      });
+    },
+  });
+
+  const handleDeleteReview = (id) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d96c4e",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        mutate(id);
+      }
+    });
+  };
   //   console.log(data);
   if (isLoading) return <UniversalSpinner />;
   if (isError) return <ComponentError error={error} refetch={refetch} />;
@@ -51,9 +95,9 @@ const MyFavorites = () => {
           <p className="mt-2 mb-4 text-base-content/50">
             Click the heart icon on a review to save it here!
           </p>
-          <GeneralBtn>
-            <Link to="/all-reviews">Find Reviews to Love</Link>
-          </GeneralBtn>
+          <Link to="/all-reviews">
+            <GeneralBtn>Find Reviews to Love</GeneralBtn>
+          </Link>
         </div>
       ) : (
         <div className="overflow-x-auto bg-base-100 p-4 rounded-lg shadow-lg">
@@ -90,6 +134,7 @@ const MyFavorites = () => {
                   <td>{review.reviewerName}</td>
                   <td>
                     <button
+                      onClick={() => handleDeleteReview(review._id)}
                       className="btn btn-ghost btn-sm text-red-500"
                       aria-label="Remove from favorites"
                     >

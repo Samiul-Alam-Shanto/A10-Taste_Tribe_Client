@@ -24,7 +24,6 @@ const StarRating = ({ rating }) => {
           <FaRegStar key={index} className="text-gray-300" />
         )
       )}
-      <span className="text-base-content/90 font-semibold ml-1">{rating}</span>
     </div>
   );
 };
@@ -60,7 +59,7 @@ const ReviewDetails = () => {
 
           {/* Right Column */}
           <div className="card-body justify-center w-full lg:w-1/2 p-8 lg:p-12">
-            <div className=" items-center space-y-2 mb-2">
+            <div className="space-y-2 mb-2">
               <p className="text-sm text-base-content/60">
                 Reviewed on {new Date(data.postedDate).toLocaleDateString()}
               </p>

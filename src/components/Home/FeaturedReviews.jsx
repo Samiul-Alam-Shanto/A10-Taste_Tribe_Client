@@ -1,11 +1,11 @@
 import React from "react";
 import useAxiosPublic from "../../hooks/Axios/useAxiosPublic";
 import { useQuery } from "@tanstack/react-query";
-import UniversalSpinner from "../../components/LoadingAnimations/UniversalSpinner";
 import ReviewCard from "../ReviewCard";
 import GeneralBtn from "../Buttons/GeneralBtn";
 import { Link } from "react-router";
 import { Fade } from "react-awesome-reveal";
+import SkeletonLoader from "../LoadingAnimations/SkeletonLoader";
 
 const FeaturedReviews = () => {
   const axiosPublic = useAxiosPublic();
@@ -18,7 +18,14 @@ const FeaturedReviews = () => {
       return res.data;
     },
   });
-  if (isLoading) return <UniversalSpinner />;
+  if (isLoading)
+    return (
+      <div className=" container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <SkeletonLoader key={i} />
+        ))}
+      </div>
+    );
   if (isError) return <ComponentError error={error} refetch={refetch} />;
 
   //   console.log(data);
@@ -35,9 +42,9 @@ const FeaturedReviews = () => {
           ))}
         </div>
         <div className="mt-12 flex justify-center items-center">
-          <GeneralBtn>
-            <Link>All Reviews</Link>
-          </GeneralBtn>
+          <Link to="/all-reviews">
+            <GeneralBtn>All Reviews</GeneralBtn>
+          </Link>
         </div>
       </section>
     </Fade>

@@ -3,6 +3,7 @@ import { FaFacebookF, FaInstagram } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import logo from "../assets/TasteTribe_Logo.png";
 import bgImg from "../assets/KnifeIcon.jpg";
+import { Link } from "react-router";
 
 const Footer = () => {
   return (
@@ -67,12 +68,20 @@ const Footer = () => {
             </h3>
             <ul className="space-y-2">
               <li>
-                <a
-                  href="#"
+                <Link
+                  to="/all-reviews"
                   className="hover:text-primary transition-colors duration-300"
                 >
                   Reviews
-                </a>
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/add-review"
+                  className="hover:text-primary transition-colors duration-300"
+                >
+                  Make A Review
+                </Link>
               </li>
               <li>
                 <a
@@ -82,14 +91,7 @@ const Footer = () => {
                   About Us
                 </a>
               </li>
-              <li>
-                <a
-                  href="#"
-                  className="hover:text-primary transition-colors duration-300"
-                >
-                  Make A Review
-                </a>
-              </li>
+
               <li>
                 <a
                   href="#"

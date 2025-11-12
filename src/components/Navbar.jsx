@@ -30,13 +30,6 @@ const Navbar = () => {
       <li>
         <NavLink to="/add-review">Add Review</NavLink>
       </li>
-      {user && (
-        <>
-          <li>
-            <NavLink to="/my-reviews">My Review</NavLink>
-          </li>
-        </>
-      )}
     </>
   );
 
@@ -110,7 +103,7 @@ const Navbar = () => {
                       to="/my-reviews"
                       className="justify-between hover:bg-linear-to-r from-[#d96c4e] to-[#fbbf2490]"
                     >
-                      My Review
+                      My Reviews
                     </Link>
                   </li>
                   <li>

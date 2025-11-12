@@ -130,9 +130,9 @@ const ReviewCard = ({ singleReview }) => {
               <p className="font-semibold text-secondary">{reviewerName}</p>
             </div>
           </div>
-          <GeneralBtn>
-            <Link to={`/review-details/${_id}`}>View Details</Link>
-          </GeneralBtn>
+          <Link to={`/review-details/${_id}`}>
+            <GeneralBtn>View Details</GeneralBtn>
+          </Link>
         </div>
       </div>
     </div>

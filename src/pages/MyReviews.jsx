@@ -96,9 +96,9 @@ const MyReviews = () => {
           <p className="mt-2 mb-4 text-base-content/50">
             Why not share your first food experience?
           </p>
-          <GeneralBtn>
-            <Link to="/add-review">Add a Review</Link>
-          </GeneralBtn>
+          <Link to="/add-review">
+            <GeneralBtn>Add a Review</GeneralBtn>
+          </Link>
         </div>
       ) : (
         <div className="overflow-x-auto bg-base-100 p-4 rounded-lg shadow-lg">

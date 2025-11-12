@@ -81,11 +81,9 @@ const HeroSlider = () => {
                     </h1>
                     <p className="text-lg">{slide.subhead}</p>
                     <div className="flex flex-wrap gap-4">
-                      <GeneralBtn>
-                        <Link to={slide.button1_link}>
-                          {slide.button1_text}
-                        </Link>
-                      </GeneralBtn>
+                      <Link to={slide.button1_link}>
+                        <GeneralBtn>{slide.button1_text}</GeneralBtn>
+                      </Link>
                     </div>
                   </div>
                 </div>
