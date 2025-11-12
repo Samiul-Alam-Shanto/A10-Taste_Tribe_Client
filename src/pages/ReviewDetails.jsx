@@ -10,6 +10,7 @@ import {
 import useAxiosPublic from "../hooks/Axios/useAxiosPublic";
 import { useQuery } from "@tanstack/react-query";
 import UniversalSpinner from "../components/LoadingAnimations/UniversalSpinner";
+import ComponentError from "./Errors/ComponentError";
 
 const StarRating = ({ rating }) => {
   const totalStars = 5;
@@ -32,7 +33,7 @@ const ReviewDetails = () => {
   const axiosPublic = useAxiosPublic();
   const { id } = useParams();
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isError, refetch, error } = useQuery({
     queryKey: ["review_details", id],
     queryFn: async () => {
       const res = await axiosPublic.get(`/reviews/${id}`);
@@ -41,6 +42,7 @@ const ReviewDetails = () => {
     },
   });
   if (isLoading) return <UniversalSpinner />;
+  if (isError) return <ComponentError error={error} refetch={refetch} />;
 
   return (
     <section data-aos="flip-down" className="py-12 lg:py-20 bg-base-100">

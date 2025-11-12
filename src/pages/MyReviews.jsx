@@ -62,7 +62,7 @@ const MyReviews = () => {
       text: "You won't be able to revert this!",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#3085d6",
+      confirmButtonColor: "#d96c4e",
       cancelButtonColor: "#d33",
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
@@ -76,7 +76,10 @@ const MyReviews = () => {
   if (isError) return <ComponentError error={error} refetch={refetch} />;
 
   return (
-    <div className="container mx-auto my-12 lg:my-20 px-4">
+    <div
+      data-aos="zoom-in-up"
+      className="container mx-auto my-12 lg:my-20 px-4"
+    >
       <title>My Reviews - TasteTribe</title>
       <div className="text-center mb-12">
         <h2 className="text-4xl font-bold text-secondary">My Reviews</h2>
@@ -119,14 +122,22 @@ const MyReviews = () => {
                         </div>
                       </div>
                       <div>
-                        <div className="font-bold">{review.foodName}</div>
+                        <Link
+                          to={`/review-details/${review._id}`}
+                          className="font-bold"
+                        >
+                          {review.foodName}
+                        </Link>
                       </div>
                     </div>
                   </td>
                   <td>{review.restaurantName}</td>
                   <td>{new Date(review.postedDate).toLocaleDateString()}</td>
                   <td className="space-x-2">
-                    <Link className="btn btn-ghost btn-sm text-secondary">
+                    <Link
+                      to={`/edit-review/${review._id}`}
+                      className="btn btn-ghost btn-sm text-secondary"
+                    >
                       <FaEdit />
                     </Link>
                     <button
