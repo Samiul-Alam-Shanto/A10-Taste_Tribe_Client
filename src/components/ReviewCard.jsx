@@ -12,6 +12,7 @@ import { Link } from "react-router";
 import { useMutation } from "@tanstack/react-query";
 import useAxiosPublic from "../hooks/Axios/useAxiosPublic";
 import toast from "react-hot-toast";
+import useAuth from "../hooks/useAuth";
 
 const StarRating = ({ rating }) => {
   const totalStars = 5;
@@ -32,6 +33,7 @@ const StarRating = ({ rating }) => {
 };
 
 const ReviewCard = ({ singleReview }) => {
+  const { user } = useAuth();
   const axiosPublic = useAxiosPublic();
 
   const { mutate } = useMutation({
@@ -57,6 +59,7 @@ const ReviewCard = ({ singleReview }) => {
     foodName,
     restaurantName,
     location,
+    reviewerEmail,
     reviewerName,
     reviewerPhoto,
     rating,
@@ -65,12 +68,14 @@ const ReviewCard = ({ singleReview }) => {
   const handleFavoriteClick = () => {
     const myFavoriteReview = {
       reviewId: _id,
+      userEmail: user.email,
       foodImage,
       foodName,
       restaurantName,
       location,
       reviewerName,
       reviewerPhoto,
+      reviewerEmail,
       rating,
     };
     mutate(myFavoriteReview);

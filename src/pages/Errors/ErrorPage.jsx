@@ -6,7 +6,7 @@ import { Link } from "react-router";
 
 const ErrorPage = () => {
   return (
-    <section className="flex items-center justify-center min-h-screen bg-base-100 p-4">
+    <section className="flex items-center justify-center min-h-screen py-20 bg-base-100 p-4">
       <div className="container mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 items-center gap-12">
           <Slide direction="left" triggerOnce>
