@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   FaHeart,
   FaRegHeart,
@@ -9,6 +9,9 @@ import {
 } from "react-icons/fa";
 import GeneralBtn from "./Buttons/GeneralBtn";
 import { Link } from "react-router";
+import { useMutation } from "@tanstack/react-query";
+import useAxiosPublic from "../hooks/Axios/useAxiosPublic";
+import toast from "react-hot-toast";
 
 const StarRating = ({ rating }) => {
   const totalStars = 5;
@@ -29,11 +32,24 @@ const StarRating = ({ rating }) => {
 };
 
 const ReviewCard = ({ singleReview }) => {
-  const [isFavorite, setIsFavorite] = useState(false);
+  const axiosPublic = useAxiosPublic();
 
-  const handleFavoriteClick = () => {
-    setIsFavorite(!isFavorite);
-  };
+  const { mutate } = useMutation({
+    mutationFn: async (favoriteReview) => {
+      const res = await axiosPublic.post("/favorite-reviews", favoriteReview);
+      return res.data;
+    },
+    onSuccess: () => {
+      toast.success("Added to Favorites");
+    },
+    onError: (err) => {
+      if (err.response.status === 409) {
+        toast.error("This is already in your favorites.");
+      } else {
+        toast.error("Failed to Add in Favorites", err);
+      }
+    },
+  });
 
   const {
     _id,
@@ -45,6 +61,20 @@ const ReviewCard = ({ singleReview }) => {
     reviewerPhoto,
     rating,
   } = singleReview;
+
+  const handleFavoriteClick = () => {
+    const myFavoriteReview = {
+      reviewId: _id,
+      foodImage,
+      foodName,
+      restaurantName,
+      location,
+      reviewerName,
+      reviewerPhoto,
+      rating,
+    };
+    mutate(myFavoriteReview);
+  };
 
   return (
     <div className="card bg-base-100 shadow-xl rounded-lg overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 group">
@@ -59,7 +89,7 @@ const ReviewCard = ({ singleReview }) => {
           className="absolute top-4 right-4 btn btn-circle btn-sm bg-white/80 backdrop-blur-sm border-none text-red-500 hover:bg-white"
           aria-label="Add to favorites"
         >
-          {isFavorite ? <FaHeart size={16} /> : <FaRegHeart size={16} />}
+          <FaRegHeart size={16} />
         </button>
       </figure>
 

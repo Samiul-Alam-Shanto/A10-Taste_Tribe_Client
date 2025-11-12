@@ -131,6 +131,7 @@ const EditReview = () => {
 
   return (
     <section className="py-12 lg:py-20 bg-base-100">
+      <title>{`Edit ${review.foodName} Review - TasteTribe`}</title>
       <div className="container mx-auto px-4">
         <div className="max-w-3xl mx-auto bg-base-100 p-8 lg:p-12 rounded-2xl shadow-2xl">
           <Slide direction="down" triggerOnce>

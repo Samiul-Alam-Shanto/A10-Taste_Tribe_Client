@@ -106,12 +106,18 @@ const Navbar = () => {
                     </Link>
                   </li>
                   <li>
-                    <Link className="justify-between hover:bg-linear-to-r from-[#d96c4e] to-[#fbbf2490]">
+                    <Link
+                      to="/my-reviews"
+                      className="justify-between hover:bg-linear-to-r from-[#d96c4e] to-[#fbbf2490]"
+                    >
                       My Review
                     </Link>
                   </li>
                   <li>
-                    <Link className="justify-between hover:bg-linear-to-r from-[#d96c4e] to-[#fbbf2490]">
+                    <Link
+                      to="/my-favorites"
+                      className="justify-between hover:bg-linear-to-r from-[#d96c4e] to-[#fbbf2490]"
+                    >
                       My Favorites
                     </Link>
                   </li>
