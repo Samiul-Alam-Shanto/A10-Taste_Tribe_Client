@@ -5,13 +5,15 @@ import UniversalSpinner from "../components/LoadingAnimations/UniversalSpinner";
 import ReviewCard from "../components/ReviewCard";
 import GeneralBtn from "../components/Buttons/GeneralBtn";
 import { Zoom } from "react-awesome-reveal";
+import SkeletonLoader from "../components/LoadingAnimations/SkeletonLoader";
+import ComponentError from "./Errors/ComponentError";
 
 const AllReviews = () => {
   const axiosPublic = useAxiosPublic();
   const [search, setSearch] = useState("");
   const [searchText, setSearchText] = useState("");
 
-  const { data, isLoading, isFetching } = useQuery({
+  const { data, isLoading, isFetching, isError, error, refetch } = useQuery({
     queryKey: ["reviews", searchText],
     queryFn: async () => {
       const res = await axiosPublic.get(`/all-reviews?search=${searchText}`);
@@ -25,7 +27,15 @@ const AllReviews = () => {
     setSearchText(search);
   };
 
-  if (isLoading) return <UniversalSpinner />;
+  if (isLoading)
+    return (
+      <div className=" container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {Array.from({ length: 9 }).map((_, i) => (
+          <SkeletonLoader key={i} />
+        ))}
+      </div>
+    );
+  if (isError) return <ComponentError error={error} refetch={refetch} />;
 
   return (
     <Zoom triggerOnce duration={800}>
@@ -49,7 +59,7 @@ const AllReviews = () => {
             onChange={(e) => setSearch(e.target.value)}
             value={search}
             placeholder="Search by food name..."
-            className="input bg-white  w-full max-w-sm focus:ring-2 focus:ring-[#d96c4e]"
+            className="input bg-white text-accent-content  w-full max-w-sm focus:ring-2 focus:ring-[#d96c4e]"
             disabled={isFetching}
           />
           <GeneralBtn>

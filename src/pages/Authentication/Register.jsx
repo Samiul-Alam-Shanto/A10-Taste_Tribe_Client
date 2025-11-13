@@ -5,6 +5,7 @@ import useAuth from "../../hooks/useAuth";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { FaGoogle } from "react-icons/fa";
+import { errorMessage } from "../Errors/errorMessage";
 
 const Register = () => {
   const { createUser, updateUserProfile, googleSignIn } = useAuth();
@@ -28,21 +29,25 @@ const Register = () => {
             navigate("/");
           })
           .catch((error) => {
-            toast.error(error.message);
+            const errorCode = error.code;
+            toast.error(errorMessage(errorCode));
           });
       })
       .catch((error) => {
-        toast.error(error.message);
+        const errorCode = error.code;
+        toast.error(errorMessage(errorCode));
       });
   };
 
   const handleGoogleSignIn = () => {
     googleSignIn()
       .then(() => {
+        toast.success("Singed With Google Successfully");
         navigate("/");
       })
       .catch((error) => {
-        toast.error(error.message);
+        const errorCode = error.code;
+        toast.error(errorMessage(errorCode));
       });
   };
 

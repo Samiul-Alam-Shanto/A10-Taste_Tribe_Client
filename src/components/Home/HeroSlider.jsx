@@ -10,8 +10,7 @@ import { Slide } from "react-awesome-reveal";
 
 const slides = [
   {
-    image:
-      "https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=2070&auto=format&fit=crop",
+    image: "https://i.ibb.co.com/wZJ4Pj3w/photo-1504674900247-0877df9cc836.jpg",
     headline: "Discover Amazing Local Flavors",
     subhead:
       "Join a community of food lovers to find and share the best dishes near you.",
@@ -20,8 +19,7 @@ const slides = [
     button2_text: "Learn More",
   },
   {
-    image:
-      "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=1981&auto=format&fit=crop",
+    image: "https://i.ibb.co.com/27PZGx6j/photo-1565299624946-b28f40a0ae38.jpg",
     headline: "Share Your Favorite Dish",
     subhead:
       "Found a hidden gem? Post a review and let the community know what's great.",
@@ -29,8 +27,7 @@ const slides = [
     button1_link: "/add-review",
   },
   {
-    image:
-      "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?q=80&w=1887&auto=format&fit=crop",
+    image: "https://i.ibb.co.com/Nn3t1WTH/photo-1555939594-58d7cb561ad1.jpg",
     headline: "Connect with Fellow Foodies",
     subhead:
       "From home cooks to street food fanatics, find your people and share your passion.",

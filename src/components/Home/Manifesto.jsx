@@ -10,7 +10,7 @@ const manifestoPoints = [
     description:
       "Every review shines a spotlight on a local business, helping our community's most passionate chefs and owners thrive.",
     imageUrl:
-      "https://images.unsplash.com/photo-1528605248644-14dd04022da1?q=80&w=2070&auto=format&fit=crop",
+      "https://i.ibb.co.com/7NKkK7GD/photo-1539056276907-dc946d5098c9.jpg",
     align: "left",
   },
   {
@@ -20,7 +20,7 @@ const manifestoPoints = [
     description:
       "Forget the big chains. We're here to celebrate the real, passionate cooking that makes our city's food scene unique.",
     imageUrl:
-      "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?q=80&w=1887&auto=format&fit=crop",
+      "https://i.ibb.co.com/k26zZj41/premium-photo-1663858367001-89e5c92d1e0e.jpg",
     align: "right",
   },
   {
@@ -30,7 +30,7 @@ const manifestoPoints = [
     description:
       "Your voice matters. Help fellow food lovers find their next great meal by sharing your genuine experience.",
     imageUrl:
-      "https://images.unsplash.com/photo-1552566626-52f8b828add9?q=80&w=2070&auto=format&fit=crop",
+      "https://i.ibb.co.com/GfbcDK9p/photo-1578474846511-04ba529f0b88.jpg",
     align: "left",
   },
 ];

@@ -7,7 +7,10 @@ const AuthPage = () => {
     <div className="min-h-screen flex items-center justify-center py-20 ">
       <div className="bg-white w-[90%] max-w-3xl rounded-md shadow-md flex flex-col md:flex-row overflow-hidden">
         {/* Left Side */}
-        <div className="flex-1 flex flex-col justify-center items-center p-8 text-center">
+        <div
+          data-aos="flip-down"
+          className="flex-1 flex flex-col justify-center items-center p-8 text-center"
+        >
           <h1 className="text-3xl font-bold text-gradient mb-3">TasteTribe</h1>
           <p className="text-base-content text-sm max-w-sm">
             TasteTribe is your gateway to local flavors! Discover hidden gems,
@@ -16,7 +19,10 @@ const AuthPage = () => {
         </div>
 
         {/* Right Side */}
-        <div className="flex-1 bg-white border-t md:border-t-0 md:border-l border-gray-200 p-8">
+        <div
+          data-aos="flip-up"
+          className="flex-1 bg-white border-t md:border-t-0 md:border-l border-gray-200 p-8"
+        >
           {/* Tabs */}
           <div role="tablist" className="tabs tabs-lifted justify-center mb-6">
             <input

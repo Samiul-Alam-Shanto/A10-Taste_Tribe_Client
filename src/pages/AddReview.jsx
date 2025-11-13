@@ -89,7 +89,7 @@ const AddReview = () => {
             className="w-full relative lg:w-2/5 p-8 bg-cover bg-center h-[400px] lg:h-auto"
             style={{
               backgroundImage:
-                "url('https://images.unsplash.com/photo-1484980972926-edee96e0960d?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=687')",
+                "url('https://i.ibb.co.com/TDVFQbv4/photo-1484980972926-edee96e0960d.jpg')",
             }}
           >
             <div className="absolute inset-0 bg-black/50 text-white space-y-4 p-8 flex flex-col justify-center">

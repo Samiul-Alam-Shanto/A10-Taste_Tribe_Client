@@ -5,6 +5,7 @@ import AuthBtn from "../../components/Buttons/AuthBtn";
 import useAuth from "../../hooks/useAuth";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import { errorMessage } from "../Errors/errorMessage";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -27,7 +28,8 @@ const Login = () => {
         toast.success("SignIn  Successful");
       })
       .catch((error) => {
-        toast.error(error.message);
+        const errorCode = error.code;
+        toast.error(errorMessage(errorCode));
       });
   };
 
@@ -38,7 +40,8 @@ const Login = () => {
         toast.success("SignIn with Google Successfully");
       })
       .catch((error) => {
-        toast.error(error.message);
+        const errorCode = error.code;
+        toast.error(errorMessage(errorCode));
       });
   };
 
@@ -64,22 +67,35 @@ const Login = () => {
             )}
           </div>
 
-          <div className="relative mb-0">
+          <div>
             <label className="block text-sm font-medium text-base-content mb-1">
               Password
             </label>
-            <input
-              type={showPassword ? "text" : "password"}
-              placeholder="Enter your password"
-              className="input w-full focus:ring-2 focus:ring-[#d96c4e]"
-              {...register("password", { required: "Password is required" })}
-            />
-            <span
-              className="cursor-pointer right-5 bottom-3 absolute z-5"
-              onClick={() => setShowPassword(!showPassword)}
-            >
-              {showPassword ? <FaEyeSlash /> : <FaEye />}
-            </span>
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="Enter your password"
+                className="input w-full focus:ring-2 focus:ring-[#d96c4e]"
+                {...register("password", {
+                  required: "Password is required",
+                  minLength: {
+                    value: 6,
+                    message: "Password must be at least 6 characters long",
+                  },
+                  pattern: {
+                    value: /^(?=.*[a-z])(?=.*[A-Z]).+$/,
+                    message:
+                      "Password must include both uppercase and lowercase letters",
+                  },
+                })}
+              />
+              <span
+                className="cursor-pointer right-5 bottom-3 absolute z-5"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </span>
+            </div>
             {errors.password && (
               <p className="text-red-500 text-xs mt-1">
                 {errors.password.message}

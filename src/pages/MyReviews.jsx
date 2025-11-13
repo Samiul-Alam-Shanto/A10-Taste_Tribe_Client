@@ -124,7 +124,7 @@ const MyReviews = () => {
                       <div>
                         <Link
                           to={`/review-details/${review._id}`}
-                          className="font-bold"
+                          className="font-bold hover:text-primary"
                         >
                           {review.foodName}
                         </Link>

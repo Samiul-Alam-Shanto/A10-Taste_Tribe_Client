@@ -9,7 +9,7 @@ import UniversalSpinner from "../components/LoadingAnimations/UniversalSpinner";
 const MainLayout = () => {
   useEffect(() => {
     AOS.init({
-      duration: 2000,
+      duration: 1500,
       offset: 100,
       once: true,
     });
@@ -31,7 +31,7 @@ const MainLayout = () => {
       <header>
         <Navbar />
       </header>
-      <main className="bg-[#FEFBF3] pt-16 min-h-[80vh]">
+      <main className="bg-[#f7f3e8] py-16 min-h-[80vh]">
         {isRouting ? <UniversalSpinner /> : <Outlet />}
       </main>
       <footer>
