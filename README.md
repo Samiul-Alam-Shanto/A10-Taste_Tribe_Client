@@ -41,15 +41,21 @@ Smooth UI feedback for all actions — no boring alerts!
 
 🧠 Tech Stack
 Layer Technologies
-Frontend React 19, Vite, React Router 7, DaisyUI, TailwindCSS 4
+Frontend :
+React 19, Vite, React Router 7, DaisyUI, TailwindCSS 4
 State & Data TanStack Query 5, Axios, React Hook Form
 Auth Firebase Authentication
-Backend Node.js, Express.js, MongoDB
-UI Enhancements React Icons, AOS Animations, SweetAlert2, React Toastify
-Deployment Netlify / Surge (Client), Vercel (Server)
+
+Backend :
+Node.js, Express.js, MongoDB
+
+UI Enhancements :
+React Icons, AOS Animations, SweetAlert2, React Toastify
+
+Deployment : Firebase (Client), Vercel (Server)
 
 🔐 Core Pages
-Page Description
+Page Description :
 🏠 Home Hero banner + featured reviews + custom sections
 🍴 All Reviews Public list of all reviews (with search + favorites)
 ✍️ Add Review Protected form to post new reviews
