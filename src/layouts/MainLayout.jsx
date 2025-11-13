@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Outlet, useLocation } from "react-router";
+import { Outlet, ScrollRestoration, useLocation } from "react-router";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import AOS from "aos";
@@ -37,6 +37,7 @@ const MainLayout = () => {
       <footer>
         <Footer />
       </footer>
+      <ScrollRestoration />
     </div>
   );
 };
