@@ -164,10 +164,10 @@ const Register = () => {
       </div>
 
       <div className="text-center">
-        <div className="divider text-base-content">OR</div>
+        <div className="divider  text-secondary">OR</div>
         <button
           onClick={handleGoogleSignIn}
-          className="btn custom-gradient rounded-xl text-primary-content w-full border-[#e5e5e5]"
+          className="btn custom-gradient rounded-xl text-primary-content w-full border-base-300"
         >
           <FaGoogle />
           SignUp with Google

@@ -26,6 +26,23 @@
   --color-base-300: #e8e2d9; /* For Borders / Dividers */
 }
 
+@plugin "daisyui/theme" {
+  name: "dark";
+
+  --color-primary: #f4a77a; /* Soft Terracotta Glow */
+  --color-accent: #f5c86f; /* Muted Amber Gold */
+  --color-base-100: #1e1b18; /* Deep Espresso Background */
+  --color-base-content: #f5ede3; /* Light Sand Text */
+  --color-secondary: #8b5e56; /* Warm Clay Brown */
+
+  --color-primary-content: #1e1b18; /* Dark Text on Primary Buttons */
+  --color-secondary-content: #fefbf3; /* Light Text on Secondary Buttons */
+  --color-accent-content: #1e1b18; /* Dark Text on Amber Accent */
+
+  --color-base-200: #2b2622; /* For Cards / Containers */
+  --color-base-300: #3a332f; /* For Borders / Dividers */
+}
+
 * {
   font-family: "Poppins", sans-serif;
 }

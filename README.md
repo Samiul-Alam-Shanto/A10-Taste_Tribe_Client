@@ -1,16 +1,68 @@
-# React + Vite
+🍽️ TasteTribe
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A Community for Food Explorers & Local Taste Seekers
 
-Currently, two official plugins are available:
+Discover, share, and celebrate authentic local food experiences — from street stalls to hidden restaurants!
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+🌐 Live Site: https://taste-tribe-food.web.app
 
-## React Compiler
+🚀 About the Project
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Local Food Lovers Network is a full-stack MERN web application built for food enthusiasts.
+It connects people who love exploring local cuisine, sharing food reviews, and discovering hidden culinary gems in their area.
 
-## Expanding the ESLint configuration
+This platform encourages community-driven discovery — where every review tells a story, and every meal brings people closer.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+🌟 Key Features
+
+✅ Dynamic Reviews:
+Users can share and explore reviews with food photos, restaurant info, and ratings.
+
+✅ Favorites System ❤️:
+Add any review to your personal favorites list and view them later from “My Favorites”.
+
+✅ Authentication:
+Secure login/register using Firebase Auth with Google or Email/Password.
+
+✅ Smart Search 🔍:
+Find reviews instantly by food name — powered by MongoDB’s $regex search.
+
+✅ CRUD Operations:
+Add, Edit, Delete, and View your own reviews (protected routes).
+
+✅ Dark Mode 🌙 / Light Mode ☀️:
+Modern toggle-based theme switch powered by Tailwind + DaisyUI.
+
+✅ Fully Responsive:
+Beautifully adapts to mobile, tablet, and desktop.
+
+✅ Toast Notifications & Sweet Alerts:
+Smooth UI feedback for all actions — no boring alerts!
+
+🧠 Tech Stack
+Layer Technologies
+Frontend React 19, Vite, React Router 7, DaisyUI, TailwindCSS 4
+State & Data TanStack Query 5, Axios, React Hook Form
+Auth Firebase Authentication
+Backend Node.js, Express.js, MongoDB
+UI Enhancements React Icons, AOS Animations, SweetAlert2, React Toastify
+Deployment Netlify / Surge (Client), Vercel (Server)
+
+🔐 Core Pages
+Page Description
+🏠 Home Hero banner + featured reviews + custom sections
+🍴 All Reviews Public list of all reviews (with search + favorites)
+✍️ Add Review Protected form to post new reviews
+📋 My Reviews Manage (edit/delete) your reviews
+❤️ My Favorites See your saved favorite reviews
+🔑 Login / Register Firebase authentication pages
+⚙️ 404 Page Custom styled “Page Not Found” with navigation
+🧩 Special Additions
+
+✨ Smooth scroll animations with AOS
+
+💾 Persistent theme toggle via localStorage
+
+🔁 Protected routes remain accessible on reload
+
+💬 Clean, consistent typography with Poppins font

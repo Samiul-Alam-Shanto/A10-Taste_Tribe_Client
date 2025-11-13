@@ -51,7 +51,7 @@ const Login = () => {
       <div>
         <form onSubmit={handleSubmit(handleLogIn)} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-base-content mb-1">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Email address
             </label>
             <input
@@ -68,7 +68,7 @@ const Login = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-base-content mb-1">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Password
             </label>
             <div className="relative">
@@ -104,7 +104,7 @@ const Login = () => {
           </div>
 
           <div>
-            <Link className="text-sm text-base-content hover:text-primary">
+            <Link className="text-sm text-accent-content hover:text-primary">
               Forgot Password?
             </Link>
           </div>

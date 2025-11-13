@@ -1,5 +1,5 @@
 import React from "react";
-import { FaLeaf } from "react-icons/fa";
+import { FaLeaf, FaMoon, FaSun } from "react-icons/fa";
 import { Link, NavLink } from "react-router";
 import logo from "../assets/TasteTribe_Logo.png";
 import AuthBtn from "./Buttons/AuthBtn";
@@ -7,9 +7,11 @@ import useAuth from "../hooks/useAuth";
 import toast from "react-hot-toast";
 import LogoutBtn from "./Buttons/LogoutBtn";
 import { Slide } from "react-awesome-reveal";
+import useThemeToggle from "../hooks/useThemeToggle";
 
 const Navbar = () => {
   const { user, logOut } = useAuth();
+  const { theme, toggleTheme } = useThemeToggle();
 
   const handleLogOut = () => {
     logOut()
@@ -82,6 +84,15 @@ const Navbar = () => {
           </div>
 
           <div className="navbar-end">
+            <label className="swap px-2 swap-rotate">
+              <input
+                type="checkbox"
+                onChange={toggleTheme}
+                checked={theme === "dark"}
+              />
+              <FaSun className="swap-on fill-current w-6 h-6" />
+              <FaMoon className="swap-off text-black w-6 h-6" />
+            </label>
             {user ? (
               <div className="dropdown dropdown-end">
                 <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
@@ -118,12 +129,9 @@ const Navbar = () => {
                     </Link>
                   </li>
 
-                  <div
-                    onClick={handleLogOut}
-                    className="hover:bg-linear-to-r from-[#d96c4e] to-[#fbbf2490]"
-                  >
+                  <span className="w-5" onClick={handleLogOut}>
                     <LogoutBtn />
-                  </div>
+                  </span>
                 </ul>
               </div>
             ) : (

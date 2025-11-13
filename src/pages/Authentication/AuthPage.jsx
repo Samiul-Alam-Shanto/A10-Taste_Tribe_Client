@@ -4,8 +4,8 @@ import Register from "./Register";
 
 const AuthPage = () => {
   return (
-    <div className="min-h-screen flex items-center justify-center py-20 ">
-      <div className="bg-white w-[90%] max-w-3xl rounded-md shadow-md flex flex-col md:flex-row overflow-hidden">
+    <div className="min-h-screen flex items-center  justify-center py-20 ">
+      <div className="bg-base-200 w-[90%] max-w-3xl rounded-md shadow-md flex flex-col md:flex-row overflow-hidden">
         {/* Left Side */}
         <div
           data-aos="flip-down"
@@ -21,7 +21,7 @@ const AuthPage = () => {
         {/* Right Side */}
         <div
           data-aos="flip-up"
-          className="flex-1 bg-white border-t md:border-t-0 md:border-l border-gray-200 p-8"
+          className="flex-1 bg-base-200 border-t md:border-t-0 md:border-l border-gray-200 p-8"
         >
           {/* Tabs */}
           <div role="tablist" className="tabs tabs-lifted justify-center mb-6">

@@ -31,7 +31,7 @@ const MainLayout = () => {
       <header>
         <Navbar />
       </header>
-      <main className="bg-[#f7f3e8] py-16 min-h-[80vh]">
+      <main className="bg-base-100 py-16 min-h-[80vh]">
         {isRouting ? <UniversalSpinner /> : <Outlet />}
       </main>
       <footer>
