@@ -65,6 +65,15 @@ const Navbar = () => {
                 className="navLinks menu menu-sm dropdown-content mt-3 z-1 space-y-1  p-2 shadow  bg-linear-to-br from-[#d96c4e] to-[#fbbf2490] rounded-box w-52 text-primary-content"
               >
                 {links}
+                <label className="swap px-2 sm:hidden flex justify-start items-start swap-rotate">
+                  <input
+                    type="checkbox"
+                    onChange={toggleTheme}
+                    checked={theme === "dark"}
+                  />
+                  <FaSun className="swap-on fill-current w-6 h-6" />
+                  <FaMoon className="swap-off text-black w-6 h-6 -ml-6" />
+                </label>
               </ul>
             </div>
             <Link
@@ -84,14 +93,14 @@ const Navbar = () => {
           </div>
 
           <div className="navbar-end">
-            <label className="swap px-2 swap-rotate">
+            <label className="swap px-2 hidden sm:flex swap-rotate">
               <input
                 type="checkbox"
                 onChange={toggleTheme}
                 checked={theme === "dark"}
               />
               <FaSun className="swap-on fill-current w-6 h-6" />
-              <FaMoon className="swap-off text-black w-6 h-6" />
+              <FaMoon className="swap-off text-black w-6 h-6 -ml-6" />
             </label>
             {user ? (
               <div className="dropdown dropdown-end">
