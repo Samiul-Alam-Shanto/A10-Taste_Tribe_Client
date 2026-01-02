@@ -6,12 +6,14 @@ import useAuth from "../../hooks/useAuth";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { errorMessage } from "../Errors/errorMessage";
+import useAxiosPublic from "../../hooks/Axios/useAxiosPublic";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const { signIn, googleSignIn } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const axiosPublic = useAxiosPublic();
 
   const {
     register,
@@ -35,9 +37,16 @@ const Login = () => {
 
   const handleGoogleSignIn = () => {
     googleSignIn()
-      .then(() => {
-        navigate(`${location.state ? location.state : "/"}`);
-        toast.success("SignIn with Google Successfully");
+      .then((result) => {
+        const userInfo = {
+          name: result.user.displayName,
+          email: result.user.email,
+          photoURL: result.user.photoURL,
+        };
+        axiosPublic.post("/users", userInfo).then(() => {
+          toast.success("Login with Google Successful!");
+          navigate("/");
+        });
       })
       .catch((error) => {
         const errorCode = error.code;

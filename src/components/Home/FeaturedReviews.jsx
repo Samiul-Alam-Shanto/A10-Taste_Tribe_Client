@@ -6,6 +6,7 @@ import GeneralBtn from "../Buttons/GeneralBtn";
 import { Link } from "react-router";
 import { Fade } from "react-awesome-reveal";
 import SkeletonLoader from "../LoadingAnimations/SkeletonLoader";
+import ComponentError from "../../pages/Errors/ComponentError";
 
 const FeaturedReviews = () => {
   const axiosPublic = useAxiosPublic();

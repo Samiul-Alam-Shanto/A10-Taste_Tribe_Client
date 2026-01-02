@@ -6,10 +6,12 @@ import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import { FaGoogle } from "react-icons/fa";
 import { errorMessage } from "../Errors/errorMessage";
+import useAxiosPublic from "../../hooks/Axios/useAxiosPublic";
 
 const Register = () => {
   const { createUser, updateUserProfile, googleSignIn } = useAuth();
   const navigate = useNavigate();
+  const axiosPublic = useAxiosPublic();
 
   const {
     register,
@@ -26,7 +28,18 @@ const Register = () => {
       .then(() => {
         updateUserProfile(name, photoURL)
           .then(() => {
-            navigate("/");
+            const userInfo = {
+              name: name,
+              email: email,
+              photoURL: photoURL,
+            };
+            axiosPublic.post("/users", userInfo).then((res) => {
+              if (res.data.insertedId) {
+                // console.log('User added to the database');
+                toast.success("Account created successfully!");
+                navigate("/");
+              }
+            });
           })
           .catch((error) => {
             const errorCode = error.code;
@@ -41,9 +54,16 @@ const Register = () => {
 
   const handleGoogleSignIn = () => {
     googleSignIn()
-      .then(() => {
-        toast.success("Singed With Google Successfully");
-        navigate("/");
+      .then((result) => {
+        const userInfo = {
+          name: result.user.displayName,
+          email: result.user.email,
+          photoURL: result.user.photoURL,
+        };
+        axiosPublic.post("/users", userInfo).then(() => {
+          toast.success("Login with Google Successful!");
+          navigate("/");
+        });
       })
       .catch((error) => {
         const errorCode = error.code;

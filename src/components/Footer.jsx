@@ -11,14 +11,15 @@ const Footer = () => {
       data-aos="slide-up"
       className="bg-base-200 text-base-content p-10 relative overflow-hidden"
     >
-      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 lg:left-0 lg:-translate-x-1/4 translate-y-1/4 opacity-10 transition-all duration-300 ease-in-out">
+      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 lg:left-0 lg:-translate-x-1/4 translate-y-1/4 opacity-10 z-0 pointer-events-none">
         <img className="w-[750px]" src={bgImg} alt="KnifeIcon" />
       </div>
-      <div className="hidden lg:block absolute bottom-0 right-0 translate-x-1/4 translate-y-1/4 opacity-10">
+
+      <div className="hidden lg:block absolute bottom-0 right-0 translate-x-1/4 translate-y-1/4 opacity-10 z-0 pointer-events-none">
         <img src={bgImg} className="w-[750px]" alt="KnifeIcon" />
       </div>
 
-      <div className="container mx-auto z-10">
+      <div className="container relative mx-auto z-10">
         {/* Top Section: Logo and Brand Name */}
         <div className="flex flex-col items-center justify-center mb-10">
           <img src={logo} className="w-20" alt="logo" />
@@ -70,7 +71,7 @@ const Footer = () => {
               <li>
                 <Link
                   to="/all-reviews"
-                  className="hover:text-primary transition-colors duration-300"
+                  className="hover:text-primary cursor-pointer transition-colors duration-300"
                 >
                   Reviews
                 </Link>

@@ -10,10 +10,14 @@ import {
   updateProfile,
 } from "firebase/auth";
 import { auth } from "../firebase/firebase.init";
+import useAxiosPublic from "../hooks/Axios/useAxiosPublic";
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [userRole, setUserRole] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const axiosPublic = useAxiosPublic();
 
   const googleProvider = new GoogleAuthProvider();
 
@@ -41,19 +45,48 @@ const AuthProvider = ({ children }) => {
 
   const logOut = () => {
     setLoading(true);
+    setUserRole(null);
+    setIsAdmin(false);
     return signOut(auth);
   };
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
+
+      if (currentUser) {
+        try {
+          const idToken = await currentUser.getIdToken();
+          const res = await axiosPublic.get(`/users/${currentUser.email}`, {
+            headers: {
+              Authorization: `Bearer ${idToken}`,
+            },
+          });
+
+          if (res.data) {
+            setUserRole(res.data.role);
+            setIsAdmin(res.data.role === "admin");
+          }
+        } catch (error) {
+          console.error("Failed to fetch user role:", error);
+          setUserRole(null);
+          setIsAdmin(false);
+        }
+      } else {
+        setUserRole(null);
+        setIsAdmin(false);
+      }
+
       setLoading(false);
     });
+
     return () => unsubscribe();
-  }, []);
+  }, [axiosPublic]);
   const authInfo = {
     user,
     loading,
+    userRole,
+    isAdmin,
     createUser,
     signIn,
     googleSignIn,
