@@ -10,6 +10,3 @@ const useAxiosPublic = () => {
 export default useAxiosPublic;
 
 // import.meta.env.VITE_API_URL
-
-// VITE_API_URL=http://localhost:5000
-// VITE_API_URL=https://taste-tribe-server-rouge.vercel.app

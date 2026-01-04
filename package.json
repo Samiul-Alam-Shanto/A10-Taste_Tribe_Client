@@ -10,17 +10,18 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@stripe/react-stripe-js": "^5.4.1",
+    "@stripe/stripe-js": "^8.6.0",
     "@tanstack/react-query": "^5.90.7",
-    "aos": "^2.3.4",
     "axios": "^1.13.2",
     "firebase": "^12.5.0",
-    "framer-motion": "^12.23.24",
+    "framer-motion": "^12.23.26",
     "react": "^19.1.1",
     "react-awesome-reveal": "^4.3.1",
     "react-dom": "^19.1.1",
     "react-hook-form": "^7.66.0",
-    "react-toastify": "^11.0.5",
-    "styled-components": "^6.1.19",
+    "react-leaflet": "^5.0.0",
+    "recharts": "^3.6.0",
     "sweetalert2": "^11.26.3",
     "swiper": "^12.0.3"
   },

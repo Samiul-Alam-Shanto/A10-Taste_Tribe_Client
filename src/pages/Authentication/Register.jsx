@@ -1,198 +1,153 @@
 import React from "react";
+import { FaGoogle, FaArrowRight } from "react-icons/fa";
 import { useNavigate } from "react-router";
-import AuthBtn from "../../components/Buttons/AuthBtn";
 import useAuth from "../../hooks/useAuth";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import { FaGoogle } from "react-icons/fa";
-import { errorMessage } from "../Errors/errorMessage";
 import useAxiosPublic from "../../hooks/Axios/useAxiosPublic";
+import { errorMessage } from "../Errors/errorMessage";
 
 const Register = () => {
   const { createUser, updateUserProfile, googleSignIn } = useAuth();
   const navigate = useNavigate();
   const axiosPublic = useAxiosPublic();
-
   const {
     register,
     handleSubmit,
     watch,
     formState: { errors },
   } = useForm();
-
   const password = watch("password");
 
   const handleSignUp = (data) => {
-    const { name, email, photoURL, password } = data;
-    createUser(email, password)
+    createUser(data.email, data.password)
       .then(() => {
-        updateUserProfile(name, photoURL)
-          .then(() => {
-            const userInfo = {
-              name: name,
-              email: email,
-              photoURL: photoURL,
-            };
-            axiosPublic.post("/users", userInfo).then((res) => {
-              if (res.data.insertedId) {
-                // console.log('User added to the database');
-                toast.success("Account created successfully!");
-                navigate("/");
-              }
+        updateUserProfile(data.name, data.photoURL).then(() => {
+          axiosPublic
+            .post("/users", {
+              name: data.name,
+              email: data.email,
+              photoURL: data.photoURL,
+            })
+            .then(() => {
+              toast.success("Account created successfully!");
+              navigate("/");
             });
-          })
-          .catch((error) => {
-            const errorCode = error.code;
-            toast.error(errorMessage(errorCode));
-          });
+        });
       })
-      .catch((error) => {
-        const errorCode = error.code;
-        toast.error(errorMessage(errorCode));
-      });
+      .catch((err) => toast.error(errorMessage(err.code)));
   };
 
   const handleGoogleSignIn = () => {
     googleSignIn()
-      .then((result) => {
-        const userInfo = {
-          name: result.user.displayName,
-          email: result.user.email,
-          photoURL: result.user.photoURL,
-        };
-        axiosPublic.post("/users", userInfo).then(() => {
-          toast.success("Login with Google Successful!");
-          navigate("/");
-        });
+      .then((res) => {
+        axiosPublic
+          .post("/users", {
+            name: res.user.displayName,
+            email: res.user.email,
+            photoURL: res.user.photoURL,
+          })
+          .then(() => {
+            toast.success("Welcome to the Tribe!");
+            navigate("/");
+          });
       })
-      .catch((error) => {
-        const errorCode = error.code;
-        toast.error(errorMessage(errorCode));
-      });
+      .catch((err) => toast.error(errorMessage(err.code)));
   };
 
   return (
-    <div>
-      <div>
-        <form onSubmit={handleSubmit(handleSignUp)} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Name
-            </label>
-            <input
-              type="text"
-              placeholder="Enter your name"
-              className="input w-full focus:ring-2 focus:ring-[#d96c4e]"
-              {...register("name", { required: "Name is required" })}
-            />
-            {errors.name && (
-              <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>
-            )}
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Photo URL
-            </label>
-            <input
-              type="url"
-              placeholder="Enter your photo URL"
-              className="input w-full focus:ring-2 focus:ring-[#d96c4e]"
-              {...register("photoURL", { required: "Photo URL is required" })}
-            />
-            {errors.photoURL && (
-              <p className="text-red-500 text-xs mt-1">
-                {errors.photoURL.message}
-              </p>
-            )}
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Email address
-            </label>
-            <input
-              type="email"
-              placeholder="Enter your email"
-              className="input w-full focus:ring-2 focus:ring-[#d96c4e]"
-              {...register("email", {
-                required: "Email is required",
-                pattern: {
-                  value: /^\S+@\S+$/i,
-                  message: "Invalid email address",
-                },
-              })}
-            />
-            {errors.email && (
-              <p className="text-red-500 text-xs mt-1">
-                {errors.email.message}
-              </p>
-            )}
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Password
-            </label>
-            <input
-              type="password"
-              placeholder="Enter your password"
-              className="input w-full focus:ring-2 focus:ring-[#d96c4e]"
-              {...register("password", {
-                required: "Password is required",
-                minLength: {
-                  value: 6,
-                  message: "Password must be at least 6 characters",
-                },
-                pattern: {
-                  value: /(?=.*[A-Z])(?=.*[a-z])/,
-                  message:
-                    "Password must include one uppercase and lowercase letter",
-                },
-              })}
-            />
-            {errors.password && (
-              <p className="text-red-500 text-xs mt-1">
-                {errors.password.message}
-              </p>
-            )}
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Confirm Password
-            </label>
-            <input
-              type="password"
-              placeholder="Repeat your password"
-              className="input w-full focus:ring-2 focus:ring-[#d96c4e]"
-              {...register("confirmPassword", {
-                required: "Please confirm your password",
-                validate: (value) =>
-                  value === password || "The passwords do not match",
-              })}
-            />
-            {errors.confirmPassword && (
-              <p className="text-red-500 text-xs mt-1">
-                {errors.confirmPassword.message}
-              </p>
-            )}
-          </div>
-
-          <AuthBtn>Sign Up</AuthBtn>
-        </form>
+    <div className="w-full max-w-sm mx-auto">
+      <div className="mb-8">
+        <h2 className="text-4xl font-black text-secondary mb-2">
+          Create Account
+        </h2>
+        <div className="h-1 w-12 bg-accent rounded-full"></div>
       </div>
 
-      <div className="text-center">
-        <div className="divider  text-secondary">OR</div>
+      <form onSubmit={handleSubmit(handleSignUp)} className="space-y-4">
+        <div className="space-y-1">
+          <input
+            type="text"
+            placeholder="Full Name"
+            className="input input-lg w-full bg-base-200/50 border-none focus:ring-2 focus:ring-accent/50 rounded-3xl"
+            {...register("name", { required: "Required" })}
+          />
+          {errors.name && (
+            <span className="text-error text-xs ml-4 font-bold">
+              {errors.name.message}
+            </span>
+          )}
+        </div>
+
+        <div className="space-y-1">
+          <input
+            type="url"
+            placeholder="Photo URL"
+            className="input input-lg w-full bg-base-200/50 border-none focus:ring-2 focus:ring-accent/50 rounded-3xl"
+            {...register("photoURL", { required: "Required" })}
+          />
+          {errors.photoURL && (
+            <span className="text-error text-xs ml-4 font-bold">
+              {errors.photoURL.message}
+            </span>
+          )}
+        </div>
+
+        <div className="space-y-1">
+          <input
+            type="email"
+            placeholder="Email Address"
+            className="input input-lg w-full bg-base-200/50 border-none focus:ring-2 focus:ring-accent/50 rounded-3xl"
+            {...register("email", { required: "Required" })}
+          />
+          {errors.email && (
+            <span className="text-error text-xs ml-4 font-bold">
+              {errors.email.message}
+            </span>
+          )}
+        </div>
+
+        <div className="grid grid-cols-2 gap-3">
+          <input
+            type="password"
+            placeholder="Password"
+            className="input input-lg w-full bg-base-200/50 border-none focus:ring-2 focus:ring-accent/50 rounded-3xl"
+            {...register("password", {
+              required: "Required",
+              minLength: { value: 6, message: "Min 6" },
+            })}
+          />
+
+          <input
+            type="password"
+            placeholder="Confirm"
+            className="input input-lg w-full bg-base-200/50 border-none focus:ring-2 focus:ring-accent/50 rounded-3xl"
+            {...register("confirmPassword", {
+              required: "Required",
+              validate: (val) => val === password || "No match",
+            })}
+          />
+        </div>
+
         <button
-          onClick={handleGoogleSignIn}
-          className="btn custom-gradient rounded-xl text-primary-content w-full border-base-300"
+          type="submit"
+          className="btn btn-lg w-full rounded-full bg-primary text-primary-content hover:bg-secondary border-none shadow-lg group mt-2"
         >
-          <FaGoogle />
-          SignUp with Google
+          Join the Tribe{" "}
+          <FaArrowRight className="group-hover:translate-x-1 transition-transform" />
         </button>
+      </form>
+
+      <div className="divider my-6 text-base-content/20 font-bold text-xs">
+        OR
       </div>
+
+      <button
+        onClick={handleGoogleSignIn}
+        className="btn btn-lg btn-outline w-full rounded-full border-base-300 hover:bg-base-200 hover:border-base-300 text-secondary normal-case gap-3"
+      >
+        <FaGoogle className="text-red-500" /> Google
+      </button>
     </div>
   );
 };

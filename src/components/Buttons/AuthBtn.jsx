@@ -1,85 +1,39 @@
 import React from "react";
-import styled from "styled-components";
 
-const AuthBtn = ({ children }) => {
+const AuthBtn = ({ children, onClick, type = "button" }) => {
   return (
-    <StyledWrapper>
-      <button className="cssButtons-io-button">
-        {children}
-        <div className="icon">
-          <svg
-            height={24}
-            width={24}
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path d="M0 0h24v24H0z" fill="none" />
-            <path
-              d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z"
-              fill="currentColor"
-            />
-          </svg>
-        </div>
-      </button>
-    </StyledWrapper>
+    <button
+      onClick={onClick}
+      type={type}
+      className={`
+        group relative flex items-center justify-center
+        bg-gradient-to-r from-[#d96c4e] to-[#fbbf2490]
+        text-white font-medium text-sm tracking-wider
+        h-[2.8em] pl-[1.2em] pr-[3.3em] rounded-[0.9em]
+        border-none shadow-inner cursor-pointer overflow-hidden
+        transition-all duration-300 active:scale-95
+      `}
+      style={{ boxShadow: "inset 0 0 1.6em -0.6em #4a2c2a" }}
+    >
+      {children}
+
+      <div className="absolute right-[0.3em] flex items-center justify-center h-[2.2em] w-[2.2em] bg-white rounded-[0.7em] transition-all duration-300 group-hover:w-[calc(100%-0.6em)] shadow-md">
+        <svg
+          height={24}
+          width={24}
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+          className="w-[1.1em] text-[#383838] transition-transform duration-300 group-hover:translate-x-[0.1em]"
+        >
+          <path d="M0 0h24v24H0z" fill="none" />
+          <path
+            d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z"
+            fill="currentColor"
+          />
+        </svg>
+      </div>
+    </button>
   );
 };
-
-const StyledWrapper = styled.div`
-  .cssButtons-io-button {
-    background: linear-gradient(90deg, #d96c4e, #fbbf2480);
-    color: white;
-    font-family: inherit;
-    padding: 0.35em;
-    padding-left: 1.2em;
-    font-size: 14px;
-    font-weight: 500;
-    border-radius: 0.9em;
-    border: none;
-    letter-spacing: 0.05em;
-    display: flex;
-    align-items: center;
-    justify-self: center;
-    box-shadow: inset 0 0 1.6em -0.6em #714da6;
-    overflow: hidden;
-    position: relative;
-    height: 2.8em;
-    padding-right: 3.3em;
-    cursor: pointer;
-  }
-
-  .cssButtons-io-button .icon {
-    background: white;
-    margin-left: 1em;
-    position: absolute;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 2.2em;
-    width: 2.2em;
-    border-radius: 0.7em;
-    box-shadow: 0.1em 0.1em 0.6em 0.2em #fbbf24;
-    right: 0.3em;
-    transition: all 0.3s;
-  }
-
-  .cssButtons-io-button:hover .icon {
-    width: calc(100% - 0.6em);
-  }
-
-  .cssButtons-io-button .icon svg {
-    width: 1.1em;
-    transition: transform 0.3s;
-    color: #383838;
-  }
-
-  .cssButtons-io-button:hover .icon svg {
-    transform: translateX(0.1em);
-  }
-
-  .cssButtons-io-button:active .icon {
-    transform: scale(0.8);
-  }
-`;
 
 export default AuthBtn;

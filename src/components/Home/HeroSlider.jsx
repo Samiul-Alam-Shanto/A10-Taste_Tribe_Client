@@ -3,93 +3,95 @@ import { Link } from "react-router";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
-import "swiper/css/navigation";
-import { Autoplay, Pagination, Navigation } from "swiper/modules";
+import "swiper/css/effect-fade";
+import { Autoplay, Pagination, EffectFade } from "swiper/modules";
 import GeneralBtn from "../Buttons/GeneralBtn";
-import { Slide } from "react-awesome-reveal";
+import { motion } from "framer-motion";
 
 const slides = [
   {
-    image: "https://i.ibb.co.com/wZJ4Pj3w/photo-1504674900247-0877df9cc836.jpg",
-    headline: "Discover Amazing Local Flavors",
-    subhead:
-      "Join a community of food lovers to find and share the best dishes near you.",
-    button1_text: "Explore Now",
-    button1_link: "/all-reviews",
-    button2_text: "Learn More",
+    image:
+      "https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=2070&auto=format&fit=crop",
+    headline: "Taste the Local Magic",
+    subhead: "Join the tribe of food lovers discovering hidden gems near you.",
+    button_text: "Start Exploring",
+    link: "/all-reviews",
   },
   {
-    image: "https://i.ibb.co.com/27PZGx6j/photo-1565299624946-b28f40a0ae38.jpg",
-    headline: "Share Your Favorite Dish",
-    subhead:
-      "Found a hidden gem? Post a review and let the community know what's great.",
-    button1_text: "Add a Review",
-    button1_link: "/add-review",
+    image:
+      "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?q=80&w=2070&auto=format&fit=crop",
+    headline: "Share Your Cravings",
+    subhead: "Found a dish that blew your mind? Tell the world about it.",
+    button_text: "Add a Review",
+    link: "/dashboard/add-review",
   },
   {
-    image: "https://i.ibb.co.com/Nn3t1WTH/photo-1555939594-58d7cb561ad1.jpg",
-    headline: "Connect with Fellow Foodies",
-    subhead:
-      "From home cooks to street food fanatics, find your people and share your passion.",
-    button1_text: "Join the Community",
-    button1_link: "/add-review",
-  },
-  {
-    image: "https://i.ibb.co.com/ym9Lp4q7/noodles-5252012-1280.jpg",
-    headline: "Uncover Hidden Gems",
-    subhead:
-      "Go beyond the popular spots. Discover the best-kept secrets in your neighborhood.",
-    button1_text: "Start Exploring",
-    button1_link: "/all-reviews",
+    image:
+      "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?q=80&w=1981&auto=format&fit=crop",
+    headline: "Real Food, Real People",
+    subhead: "No bots, no paid ads. Just honest opinions from your neighbors.",
+    button_text: "Join Community",
+    link: "/auth",
   },
 ];
 
 const HeroSlider = () => {
   return (
-    <Slide direction="down" triggerOnce duration={1200}>
-      <section className="h-[650px] container mx-auto mt-1 mb-16">
-        <Swiper
-          spaceBetween={30}
-          centeredSlides={true}
-          autoplay={{
-            delay: 3500,
-            disableOnInteraction: false,
-          }}
-          pagination={{
-            clickable: true,
-          }}
-          modules={[Autoplay, Pagination, Navigation]}
-          className="mySwiper h-full rounded-lg"
-        >
-          {slides.map((slide, index) => (
-            <SwiperSlide key={index}>
+    <section className="h-[85vh] w-full relative">
+      <Swiper
+        effect={"fade"}
+        autoplay={{ delay: 5000, disableOnInteraction: false }}
+        pagination={{ clickable: true, dynamicBullets: true }}
+        modules={[Autoplay, Pagination, EffectFade]}
+        className="h-full w-full"
+      >
+        {slides.map((slide, index) => (
+          <SwiperSlide key={index}>
+            <div className="relative h-full w-full">
+              {/* Image Background */}
               <div
-                className="bg-cover bg-center  h-full w-full relative"
+                className="absolute inset-0 bg-cover bg-center"
                 style={{ backgroundImage: `url(${slide.image})` }}
-              >
-                <div className="absolute  inset-0 bg-linear-to-r from-black/90 to-black/30"></div>
-                <div className="absolute flex items-center h-full left-0 lg:left-5 top-0 text-white">
-                  <div className="space-y-7 pl-4 md:pl-24 w-full md:w-3/d4 lg:w-3/5">
-                    <h1
-                      className="text-5xl lg:text-6xl font-bold"
-                      style={{ textShadow: "2px 2px 8px rgba(0,0,0,0.7)" }}
-                    >
-                      {slide.headline}
-                    </h1>
-                    <p className="text-lg">{slide.subhead}</p>
-                    <div className="flex flex-wrap gap-4">
-                      <Link to={slide.button1_link}>
-                        <GeneralBtn>{slide.button1_text}</GeneralBtn>
-                      </Link>
-                    </div>
-                  </div>
+              />
+              {/* Dark Overlay */}
+              <div className="absolute inset-0 bg-black/50" />
+
+              {/* Content */}
+              <div className="absolute inset-0 flex items-center justify-center text-center px-4">
+                <div className="max-w-4xl space-y-6">
+                  <motion.h1
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, delay: 0.2 }}
+                    className="text-5xl md:text-7xl font-bold text-[#fefbf3] tracking-tight leading-tight"
+                  >
+                    {slide.headline}
+                  </motion.h1>
+                  <motion.p
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, delay: 0.4 }}
+                    className="text-lg md:text-2xl text-[#fefbf3]/90 max-w-2xl mx-auto"
+                  >
+                    {slide.subhead}
+                  </motion.p>
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    transition={{ duration: 0.5, delay: 0.6 }}
+                    className="pt-4 flex justify-center"
+                  >
+                    <Link to={slide.link}>
+                      <GeneralBtn>{slide.button_text}</GeneralBtn>
+                    </Link>
+                  </motion.div>
                 </div>
               </div>
-            </SwiperSlide>
-          ))}
-        </Swiper>
-      </section>
-    </Slide>
+            </div>
+          </SwiperSlide>
+        ))}
+      </Swiper>
+    </section>
   );
 };
 

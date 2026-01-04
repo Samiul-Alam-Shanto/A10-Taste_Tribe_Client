@@ -1,90 +1,104 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 @import "tailwindcss";
 @plugin "daisyui" {
-  themes: all;
+  themes: light --default, dark;
 }
 
+/* --- THEME CONFIGURATION --- */
+@theme {
+  --font-sans: "Poppins", sans-serif;
+  --font-outline-2: 2px;
+}
+
+/* Light Theme (Savory) */
 @plugin "daisyui/theme" {
   name: "light";
   default: true;
-
-  --color-primary: #d96c4e; /* Earthy Terracotta */
-
-  --color-accent: #fbbf24; /* Golden Amber */
-
   --color-base-100: #fefbf3; /* Warm Cream */
+  --color-base-200: #f4efe7; /* Slightly darker cream */
+  --color-base-300: #e8e2d9; /* Borders */
+  --color-base-content: #4a2c2a; /* Rich Brown Text */
 
-  --color-base-content: #383838; /* Dark Charcoal */
+  --color-primary: #d96c4e; /* Terracotta */
+  --color-primary-content: #ffffff;
 
-  --color-secondary: #4a2c2a; /* Rich Brown */
+  --color-secondary: #4a2c2a; /* Deep Brown (Headings) */
+  --color-secondary-content: #fefbf3;
 
-  --color-primary-content: #fefbf3; /* Warm Cream (Text on Terracotta) */
-  --color-secondary-content: #fefbf3; /* Warm Cream (Text on Rich Brown) */
-  --color-accent-content: #383838; /* Dark Charcoal (Text on Golden Amber) */
-
-  --color-base-200: #f4efe7; /* For Card/Modal backgrounds */
-  --color-base-300: #e8e2d9; /* For Borders / Dividers */
+  --color-accent: #fbbf24; /* Amber */
+  --color-accent-content: #4a2c2a;
 }
 
+/* Dark Theme (Midnight Espresso) */
 @plugin "daisyui/theme" {
   name: "dark";
+  --color-base-100: #1e1b18; /* Deep Espresso */
+  --color-base-200: #2b2622; /* Coffee Bean */
+  --color-base-300: #3a332f; /* Dark Roast */
+  --color-base-content: #f5ede3; /* Milky Foam Text */
 
-  --color-primary: #f4a77a; /* Soft Terracotta Glow */
-  --color-accent: #f5c86f; /* Muted Amber Gold */
-  --color-base-100: #1e1b18; /* Deep Espresso Background */
-  --color-base-content: #f5ede3; /* Light Sand Text */
-  --color-secondary: #8b5e56; /* Warm Clay Brown */
+  --color-primary: #d96c4e; /* Terracotta (Same brand color) */
+  --color-primary-content: #ffffff;
 
-  --color-primary-content: #1e1b18; /* Dark Text on Primary Buttons */
-  --color-secondary-content: #fefbf3; /* Light Text on Secondary Buttons */
-  --color-accent-content: #1e1b18; /* Dark Text on Amber Accent */
+  --color-secondary: #f5ede3; /* Light text for headings in dark mode */
+  --color-secondary-content: #1e1b18;
 
-  --color-base-200: #2b2622; /* For Cards / Containers */
-  --color-base-300: #3a332f; /* For Borders / Dividers */
+  --color-accent: #fbbf24; /* Amber */
+  --color-accent-content: #1e1b18;
 }
 
-* {
-  font-family: "Poppins", sans-serif;
-}
+/* --- UTILITIES --- */
 
-.custom-gradient {
-  background: linear-gradient(90deg, #d96c4e, #fbbf2490);
-}
-.custom-gradient:hover {
-  background: linear-gradient(90deg, #fbbf2480, #d96c4e);
-}
+/* --- UTILITIES & ANIMATIONS --- */
 
+/* The Signature Text Gradient */
 .text-gradient {
-  background: linear-gradient(45deg, #d96c4e, #fbbf24);
+  background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
   background-clip: text;
+}
+
+/* Texture Pattern (Subtle Dots) - Adapts to theme text color */
+.bg-texture {
+  background-image: radial-gradient(currentColor 1px, transparent 0.5px);
+  background-size: 20px 20px;
+  /* opacity: 1; */
+}
+
+/* Running Marquee Animation */
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 40s linear infinite;
+}
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+/* Giant Number Outline */
+.font-outline-2 {
+  -webkit-text-stroke: 2px var(--color-base-300);
   color: transparent;
 }
 
-.navLinks > li > a.active {
-  @apply bg-linear-to-r from-[#d96c4e] to-[#fbbf24] text-primary-content;
+/* Slow Spin for Stars */
+.animate-spin-slow {
+  animation: spin 8s linear infinite;
 }
-
-@keyframes ripple {
+@keyframes spin {
   from {
-    transform: scale(0);
-    opacity: 1;
+    transform: rotate(0deg);
   }
   to {
-    transform: scale(1.5);
-    opacity: 0;
+    transform: rotate(360deg);
   }
-}
-
-/* 2. Create a class to apply the animation */
-.animate-ripple {
-  animation: ripple 1.5s cubic-bezier(0, 0.2, 0.8, 1) infinite;
-}
-
-/* 3. Create helper classes for the delays */
-.animation-delay-250ms {
-  animation-delay: 250ms;
-}
-
-.animation-delay-500ms {
-  animation-delay: 500ms;
 }

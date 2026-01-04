@@ -1,158 +1,134 @@
 import React from "react";
-import useAuth from "../hooks/useAuth";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import useAxiosPublic from "../hooks/Axios/useAxiosPublic";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { FaTrashAlt, FaEdit, FaUtensils } from "react-icons/fa";
 import { Link } from "react-router";
-import { FaEdit, FaTrash } from "react-icons/fa";
-import GeneralBtn from "../components/Buttons/GeneralBtn";
-import UniversalSpinner from "../components/LoadingAnimations/UniversalSpinner";
-import ComponentError from "./Errors/ComponentError";
+import { motion } from "framer-motion";
 import Swal from "sweetalert2";
+import useAuth from "../hooks/useAuth";
+import useAxiosSecure from "../hooks/Axios/useAxiosSecure";
+import UniversalSpinner from "../components/LoadingAnimations/UniversalSpinner";
+import GeneralBtn from "../components/Buttons/GeneralBtn";
 
 const MyReviews = () => {
   const { user } = useAuth();
-  const axiosPublic = useAxiosPublic();
+  const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
 
-  const {
-    data = [],
-    isLoading,
-    isError,
-    error,
-    refetch,
-  } = useQuery({
-    queryKey: ["my_reviews"],
+  const { data: reviews = [], isLoading } = useQuery({
+    queryKey: ["my_reviews", user?.email],
     queryFn: async () => {
-      const res = await axiosPublic.get(`/my-reviews?email=${user.email}`);
-      //   console.log(res);
+      const res = await axiosSecure.get(`/my-reviews?email=${user.email}`);
       return res.data;
     },
   });
 
-  const { mutate } = useMutation({
-    mutationFn: async (id) => {
-      const res = await axiosPublic.delete(`/reviews/${id}`);
-      console.log(res, res.data);
-      return res.data;
-    },
-    onSuccess: (res) => {
-      if (res.deletedCount > 0) {
-        Swal.fire({
-          icon: "success",
-          title: "Deleted!",
-          text: "Your review has been deleted successfully.",
-          timer: 1500,
-          showConfirmButton: false,
-        });
-        queryClient.invalidateQueries(["my_reviews"]);
-      }
-    },
-    onError: () => {
-      Swal.fire({
-        icon: "error",
-        title: "Error!",
-        text: "Failed to delete the review.",
-      });
+  const deleteMutation = useMutation({
+    mutationFn: (id) => axiosSecure.delete(`/reviews/${id}`),
+    onSuccess: () => {
+      Swal.fire("Deleted!", "Your review has been removed.", "success");
+      queryClient.invalidateQueries(["my_reviews"]);
     },
   });
 
   const handleDelete = (id) => {
     Swal.fire({
       title: "Are you sure?",
-      text: "You won't be able to revert this!",
+      text: "You can't restore this memory.",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#d96c4e",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        mutate(id);
-      }
+      confirmButtonColor: "#d33",
+    }).then((res) => {
+      if (res.isConfirmed) deleteMutation.mutate(id);
     });
   };
 
   if (isLoading) return <UniversalSpinner />;
-  if (isError) return <ComponentError error={error} refetch={refetch} />;
 
   return (
-    <div
-      data-aos="zoom-in-up"
-      className="container mx-auto my-12 lg:my-20 px-4"
-    >
-      <title>My Reviews - TasteTribe</title>
-      <div className="text-center mb-12">
-        <h2 className="text-4xl font-bold text-secondary">My Reviews</h2>
-        <p className="mt-2 text-base-content/80">
-          Manage and see all the food experiences you've shared.
-        </p>
-      </div>
-
-      {data.length === 0 ? (
-        <div className="text-center flex flex-col items-center my-16 bg-base-200 p-8 rounded-lg">
-          <p className="text-xl text-base-content/70">
-            You haven't added any reviews yet.
+    <div className="space-y-8">
+      {/* Header */}
+      <div className="bg-secondary text-secondary-content p-8 md:p-12 rounded-[2.5rem] relative overflow-hidden flex flex-col md:flex-row justify-between items-center gap-6">
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/food.png')] opacity-10"></div>
+        <div className="relative z-10">
+          <h1 className="text-4xl font-black mb-2">My Food Journal</h1>
+          <p className="opacity-70 text-lg">
+            You have shared <strong>{reviews.length}</strong> culinary
+            experiences.
           </p>
-          <p className="mt-2 mb-4 text-base-content/50">
-            Why not share your first food experience?
-          </p>
-          <Link to="/add-review">
-            <GeneralBtn>Add a Review</GeneralBtn>
+        </div>
+        <div className="relative z-10">
+          <Link to="/dashboard/add-review">
+            <GeneralBtn>+ Add New Memory</GeneralBtn>
           </Link>
         </div>
-      ) : (
-        <div className="overflow-x-auto bg-base-100 p-4 rounded-lg shadow-lg">
-          <table className="table table-zebra w-full">
-            <thead className="text-sm text-secondary uppercase">
-              <tr>
-                <th>Food</th>
-                <th>Restaurant Name</th>
-                <th>Posted Date</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.map((review) => (
-                <tr key={review._id} className="hover">
-                  <td>
-                    <div className="flex items-center gap-3">
-                      <div className="avatar">
-                        <div className="mask mask-squircle w-12 h-12">
-                          <img src={review.foodImage} alt={review.foodName} />
-                        </div>
-                      </div>
-                      <div>
-                        <Link
-                          to={`/review-details/${review._id}`}
-                          className="font-bold hover:text-primary"
-                        >
-                          {review.foodName}
-                        </Link>
-                      </div>
-                    </div>
-                  </td>
-                  <td>{review.restaurantName}</td>
-                  <td>{new Date(review.postedDate).toLocaleDateString()}</td>
-                  <td className="space-x-2">
+      </div>
+
+      {/* Reviews List */}
+      <div className="grid gap-6">
+        {reviews.length === 0 ? (
+          <div className="text-center py-20 bg-base-100 rounded-[2.5rem] border-2 border-dashed border-base-300">
+            <FaUtensils className="mx-auto text-4xl text-base-300 mb-4" />
+            <h3 className="text-xl font-bold text-secondary">
+              Your plate is empty.
+            </h3>
+            <p className="text-base-content/60">Go eat something tasty!</p>
+          </div>
+        ) : (
+          reviews.map((review, i) => (
+            <motion.div
+              key={review._id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.1 }}
+              className="bg-base-100 p-2 rounded-4xl shadow-sm border border-base-200 flex flex-col md:flex-row gap-4 group"
+            >
+              {/* Image */}
+              <div className="w-full md:w-48 h-48 rounded-[1.5rem] overflow-hidden relative">
+                <img
+                  src={review.foodImage}
+                  alt=""
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                />
+                <div className="absolute top-3 left-3 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-xs font-bold text-secondary shadow-md">
+                  {review.rating}/5 ★
+                </div>
+              </div>
+
+              {/* Content */}
+              <div className="flex-1 p-4 flex flex-col justify-center">
+                <h3 className="text-2xl font-bold text-secondary mb-1">
+                  {review.foodName}
+                </h3>
+                <p className="text-sm font-bold text-primary uppercase tracking-wide mb-4">
+                  {review.restaurantName}
+                </p>
+                <p className="text-base-content/70 italic line-clamp-2 mb-4">
+                  "{review.reviewText}"
+                </p>
+                <div className="mt-auto pt-4 border-t border-base-200 flex items-center justify-between">
+                  <span className="text-xs font-bold text-base-content/40">
+                    {new Date(review.postedDate).toLocaleDateString()}
+                  </span>
+                  <div className="flex gap-2">
                     <Link
-                      to={`/edit-review/${review._id}`}
-                      className="btn btn-ghost btn-sm text-secondary"
+                      to={`/dashboard/edit-review/${review._id}`}
+                      className="btn btn-sm btn-ghost text-secondary"
                     >
-                      <FaEdit />
+                      <FaEdit /> Edit
                     </Link>
                     <button
                       onClick={() => handleDelete(review._id)}
-                      className="btn btn-ghost btn-sm text-red-500"
+                      className="btn btn-sm btn-ghost text-error"
                     >
-                      <FaTrash />
+                      <FaTrashAlt /> Delete
                     </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          ))
+        )}
+      </div>
     </div>
   );
 };

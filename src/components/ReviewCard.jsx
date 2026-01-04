@@ -1,141 +1,134 @@
 import React from "react";
+import { Link } from "react-router";
+import { motion } from "framer-motion";
 import {
+  FaStar,
+  FaMapMarkerAlt,
   FaHeart,
   FaRegHeart,
-  FaStar,
-  FaRegStar,
-  FaMapMarkerAlt,
   FaStore,
 } from "react-icons/fa";
-import GeneralBtn from "./Buttons/GeneralBtn";
-import { Link } from "react-router";
-import { useMutation } from "@tanstack/react-query";
-import useAxiosPublic from "../hooks/Axios/useAxiosPublic";
-import toast from "react-hot-toast";
 import useAuth from "../hooks/useAuth";
-
-const StarRating = ({ rating }) => {
-  const totalStars = 5;
-  const filledStars = rating;
-
-  return (
-    <div className="flex items-center gap-1">
-      {[...Array(totalStars)].map((_, index) =>
-        index < filledStars ? (
-          <FaStar key={index} className="text-amber-400" />
-        ) : (
-          <FaRegStar key={index} className="text-gray-300" />
-        )
-      )}
-      <span className="text-base-content/90 font-semibold ml-1">{rating}</span>
-    </div>
-  );
-};
+import { useMutation } from "@tanstack/react-query";
+import toast from "react-hot-toast";
+import GeneralBtn from "./Buttons/GeneralBtn";
+import useAxiosSecure from "../hooks/Axios/useAxiosSecure";
 
 const ReviewCard = ({ singleReview }) => {
   const { user } = useAuth();
-  const axiosPublic = useAxiosPublic();
-
-  const { mutate } = useMutation({
-    mutationFn: async (favoriteReview) => {
-      const res = await axiosPublic.post("/favorite-reviews", favoriteReview);
-      return res.data;
-    },
-    onSuccess: () => {
-      toast.success("Added to Favorites");
-    },
-    onError: (err) => {
-      if (err.response.status === 409) {
-        toast.error("This is already in your favorites.");
-      } else {
-        toast.error("Failed to Add in Favorites", err);
-      }
-    },
-  });
-
+  const axiosSecure = useAxiosSecure();
   const {
     _id,
     foodImage,
     foodName,
     restaurantName,
     location,
-    reviewerEmail,
+    rating,
     reviewerName,
     reviewerPhoto,
-    rating,
   } = singleReview;
 
-  const handleFavoriteClick = () => {
-    const myFavoriteReview = {
-      reviewId: _id,
-      userEmail: user.email,
-      foodImage,
-      foodName,
-      restaurantName,
-      location,
-      reviewerName,
-      reviewerPhoto,
-      reviewerEmail,
-      rating,
-    };
-    mutate(myFavoriteReview);
-  };
+  // Favorite Logic
+  const { mutate } = useMutation({
+    mutationFn: async () => {
+      if (!user) throw new Error("Please login first");
+      const favData = { ...singleReview, userEmail: user.email, reviewId: _id };
+      delete favData._id;
+      return axiosSecure.post("/favorite-reviews", favData);
+    },
+    onSuccess: () => toast.success("Saved to favorites!"),
+    onError: (err) =>
+      toast.error(
+        err.response?.status === 409 ? "Already in favorites" : "Login required"
+      ),
+  });
 
   return (
-    <div className="card bg-base-100 shadow-xl rounded-lg overflow-hidden transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 group">
-      <figure className="relative h-56">
+    <motion.div
+      initial={{ opacity: 0, scale: 0.95 }}
+      whileInView={{ opacity: 1, scale: 1 }}
+      viewport={{ once: true }}
+      whileHover={{ y: -8 }}
+      className="group bg-base-100 rounded-[2rem] overflow-hidden shadow-sm hover:shadow-2xl border border-base-200 transition-all duration-300 h-full flex flex-col"
+    >
+      {/* 1. Image Area */}
+      <div className="relative h-64 overflow-hidden">
         <img
           src={foodImage}
-          alt={`Photo of ${foodName}`}
-          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+          alt={foodName}
+          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
         />
+
+        {/* Overlay Gradient (for text readability if needed, currently clean) */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+
+        {/* Favorite Button (Floating) */}
         <button
-          onClick={handleFavoriteClick}
-          className="absolute top-4 right-4 btn btn-circle btn-sm bg-white/80 backdrop-blur-sm border-none text-red-500 hover:bg-white"
-          aria-label="Add to favorites"
+          onClick={(e) => {
+            e.preventDefault();
+            mutate();
+          }}
+          className="absolute top-3 right-3 w-10 h-10 bg-base-100/80 backdrop-blur-md rounded-full flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all shadow-md z-10"
         >
-          <FaRegHeart size={16} />
+          <FaRegHeart />
         </button>
-      </figure>
 
-      <div className="card-body p-6">
-        <div className="flex justify-between pt-5 h-24 items-start">
-          <h2 className="card-title text-2xl font-bold text-secondary mb-2">
-            {foodName}
-          </h2>
-          <StarRating rating={rating} />
-        </div>
-
-        <div className="space-y-2 mt-2 text-base-content/80">
-          <div className="flex items-center gap-2">
-            <FaStore className="text-primary" />
-            <span>{restaurantName}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <FaMapMarkerAlt className="text-primary" />
-            <span>{location}</span>
-          </div>
-        </div>
-
-        <div className="divider my-4"></div>
-
-        <div className="card-actions flex flex-nowrap justify-between items-center">
-          <div className="flex items-center gap-3">
-            <div className="avatar">
-              <div className="w-10 h-10 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
-                <img src={reviewerPhoto} alt={`Avatar of ${reviewerName}`} />
-              </div>
-            </div>
-            <div>
-              <p className="font-semibold text-secondary">{reviewerName}</p>
-            </div>
-          </div>
-          <Link to={`/review-details/${_id}`}>
-            <GeneralBtn>View Details</GeneralBtn>
-          </Link>
+        {/* Rating Badge (Floating) */}
+        <div className="absolute bottom-3 left-3 bg-base-100/90 backdrop-blur-md px-3 py-1 rounded-full flex items-center gap-1 shadow-sm text-xs font-bold text-secondary">
+          <FaStar className="text-accent" /> {rating}/5
         </div>
       </div>
-    </div>
+
+      {/* 2. Content Area */}
+      <div className="p-5 flex flex-col flex-1">
+        {/* Header Info */}
+        <div className="mb-3">
+          <h3
+            className="text-lg font-black text-secondary line-clamp-1 group-hover:text-primary transition-colors"
+            title={foodName}
+          >
+            {foodName}
+          </h3>
+          <p className="text-xs font-bold text-base-content/50 uppercase tracking-wider mt-1 flex items-center gap-1 line-clamp-1">
+            <FaStore className="text-accent" /> {restaurantName}
+          </p>
+        </div>
+
+        {/* Location & Meta */}
+        <div className="flex items-center gap-2 text-sm text-base-content/70 mb-4">
+          <FaMapMarkerAlt className="text-primary flex-shrink-0" />
+          <span className="truncate">{location}</span>
+        </div>
+
+        {/* Spacer to push footer down */}
+        <div className="mt-auto"></div>
+
+        {/* Divider */}
+        <div className="h-px bg-base-200 my-4"></div>
+
+        {/* 3. Footer: Avatar + General Btn */}
+        <div className="flex items-center justify-between gap-3">
+          {/* User Info */}
+          <div className="flex items-center gap-2 min-w-0">
+            <img
+              src={reviewerPhoto}
+              alt={reviewerName}
+              className="w-8 h-8 rounded-full border border-base-300 flex-shrink-0"
+            />
+            <span className="text-xs font-bold text-secondary truncate">
+              {reviewerName?.split(" ")[0]}
+            </span>
+          </div>
+
+          {/* The General Button (Compact Wrapper) */}
+          <div className="scale-90 origin-right">
+            <Link to={`/review-details/${_id}`}>
+              <GeneralBtn>View</GeneralBtn>
+            </Link>
+          </div>
+        </div>
+      </div>
+    </motion.div>
   );
 };
 

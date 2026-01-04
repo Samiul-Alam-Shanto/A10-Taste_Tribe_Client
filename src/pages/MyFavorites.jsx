@@ -1,150 +1,126 @@
 import React from "react";
-import useAuth from "../hooks/useAuth";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import useAxiosPublic from "../hooks/Axios/useAxiosPublic";
-import UniversalSpinner from "../components/LoadingAnimations/UniversalSpinner";
-import ComponentError from "./Errors/ComponentError";
-import { FaTrash } from "react-icons/fa";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { FaTrashAlt, FaHeartBroken, FaArrowRight } from "react-icons/fa";
 import { Link } from "react-router";
-import GeneralBtn from "../components/Buttons/GeneralBtn";
+import { motion } from "framer-motion";
 import Swal from "sweetalert2";
+import useAuth from "../hooks/useAuth";
+import useAxiosSecure from "../hooks/Axios/useAxiosSecure";
+import UniversalSpinner from "../components/LoadingAnimations/UniversalSpinner";
+import GeneralBtn from "../components/Buttons/GeneralBtn";
 
 const MyFavorites = () => {
   const { user } = useAuth();
-  const axiosPublic = useAxiosPublic();
+  const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
 
-  const {
-    data = [],
-    isLoading,
-    isError,
-    error,
-    refetch,
-  } = useQuery({
-    queryKey: ["favorites"],
+  const { data: favorites = [], isLoading } = useQuery({
+    queryKey: ["favorites", user?.email],
     queryFn: async () => {
-      const res = await axiosPublic.get(
+      const res = await axiosSecure.get(
         `/my-favorite-reviews?email=${user.email}`
       );
       return res.data;
     },
   });
 
-  const { mutate } = useMutation({
-    mutationFn: async (id) => {
-      const result = await axiosPublic.delete(`/favorite-reviews/${id}`);
-      return result.data;
-    },
-    onSuccess: (res) => {
-      if (res.deletedCount > 0) {
-        Swal.fire({
-          icon: "success",
-          title: "Deleted!",
-          text: "Your review has been deleted successfully.",
-          timer: 1500,
-          showConfirmButton: false,
-        });
-        queryClient.invalidateQueries(["favorites"]);
-      }
-    },
-    onError: () => {
+  const deleteMutation = useMutation({
+    mutationFn: (id) => axiosSecure.delete(`/favorite-reviews/${id}`),
+    onSuccess: () => {
       Swal.fire({
-        icon: "error",
-        title: "Error!",
-        text: "Failed to delete the review.",
+        icon: "success",
+        title: "Removed",
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 2000,
       });
+      queryClient.invalidateQueries(["favorites"]);
     },
   });
 
-  const handleDeleteReview = (id) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#d96c4e",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        mutate(id);
-      }
-    });
-  };
-  //   console.log(data);
   if (isLoading) return <UniversalSpinner />;
-  if (isError) return <ComponentError error={error} refetch={refetch} />;
+
   return (
-    <div
-      data-aos="zoom-in-up"
-      className="container mx-auto my-12 lg:my-20 px-4"
-    >
-      <title>My Favorites - TasteTribe</title>
-      <div className="text-center mb-12">
-        <h2 className="text-4xl font-bold text-secondary">My Favorites</h2>
-        <p className="mt-2 text-base-content/80">
-          A collection of the best dishes you've saved.
+    <div className="space-y-10">
+      <div className="text-center">
+        <span className="text-primary font-bold uppercase tracking-widest text-sm">
+          Collections
+        </span>
+        <h1 className="text-4xl md:text-5xl font-black text-secondary mt-2">
+          My Cookbook
+        </h1>
+        <p className="text-base-content/60 mt-2">
+          The dishes you want to eat again.
         </p>
       </div>
 
-      {data.length === 0 ? (
-        <div className="text-center flex flex-col items-center my-16 bg-base-200 p-8 rounded-lg">
-          <p className="text-xl text-base-content/70">
-            You haven't added any favorites yet.
+      {favorites.length === 0 ? (
+        <div className="text-center py-20">
+          <div className="w-24 h-24 bg-base-200 rounded-full flex items-center justify-center mx-auto mb-6 text-base-300 text-4xl">
+            <FaHeartBroken />
+          </div>
+          <h3 className="text-xl font-bold text-secondary">
+            No favorites yet.
+          </h3>
+          <p className="text-base-content/60 mb-8">
+            Start exploring to build your collection.
           </p>
-          <p className="mt-2 mb-4 text-base-content/50">
-            Click the heart icon on a review to save it here!
-          </p>
-          <Link to="/all-reviews">
-            <GeneralBtn>Find Reviews to Love</GeneralBtn>
+          <Link className="flex items-center justify-center" to="/all-reviews">
+            <GeneralBtn>Explore Food</GeneralBtn>
           </Link>
         </div>
       ) : (
-        <div className="overflow-x-auto bg-base-100 p-4 rounded-lg shadow-lg">
-          <table className="table table-zebra w-full">
-            <thead className="text-sm text-secondary uppercase">
-              <tr>
-                <th>Food</th>
-                <th>Restaurant</th>
-                <th>Original Reviewer</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data.map((review) => (
-                <tr key={review._id} className="hover">
-                  <td>
-                    <div className="flex items-center gap-3">
-                      <div className="avatar">
-                        <div className="mask mask-squircle w-12 h-12">
-                          <img src={review.foodImage} alt={review.foodName} />
-                        </div>
-                      </div>
-                      <div>
-                        <Link
-                          to={`/review-details/${review.reviewId}`}
-                          className="font-bold hover:text-primary"
-                        >
-                          {review.foodName}
-                        </Link>
-                      </div>
-                    </div>
-                  </td>
-                  <td>{review.restaurantName}</td>
-                  <td>{review.reviewerName}</td>
-                  <td>
-                    <button
-                      onClick={() => handleDeleteReview(review._id)}
-                      className="btn btn-ghost btn-sm text-red-500"
-                      aria-label="Remove from favorites"
-                    >
-                      <FaTrash />
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {favorites.map((fav, i) => (
+            <motion.div
+              key={fav._id}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: i * 0.05 }}
+              className="group bg-base-100 rounded-[2.5rem] overflow-hidden shadow-sm hover:shadow-xl border border-base-200 transition-all duration-300 flex flex-col"
+            >
+              {/* Image Top */}
+              <div className="h-56 relative overflow-hidden">
+                <img
+                  src={fav.foodImage}
+                  alt=""
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent opacity-60"></div>
+                <div className="absolute bottom-4 left-4 text-white">
+                  <h3 className="text-xl font-bold">{fav.foodName}</h3>
+                  <p className="text-sm opacity-90">{fav.restaurantName}</p>
+                </div>
+                <button
+                  onClick={() => deleteMutation.mutate(fav._id)}
+                  className="absolute top-4 right-4 bg-white/20 backdrop-blur p-2 rounded-full text-white hover:bg-red-500 hover:text-white transition-colors"
+                >
+                  <FaTrashAlt size={14} />
+                </button>
+              </div>
+
+              {/* Footer Info */}
+              <div className="p-6 flex items-center justify-between bg-base-100 mt-auto">
+                <div className="flex items-center gap-2">
+                  <img
+                    src={fav.reviewerPhoto}
+                    alt="user"
+                    className="w-8 h-8 rounded-full border border-base-300"
+                  />
+                  <span className="text-xs font-bold text-base-content/60">
+                    By {fav.reviewerName}
+                  </span>
+                </div>
+                <Link
+                  to={`/review-details/${fav.reviewId}`}
+                  className="btn btn-circle btn-sm btn-ghost text-secondary hover:bg-primary hover:text-white transition-colors"
+                >
+                  <FaArrowRight />
+                </Link>
+              </div>
+            </motion.div>
+          ))}
         </div>
       )}
     </div>

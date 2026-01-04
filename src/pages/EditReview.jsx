@@ -2,69 +2,31 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm, Controller } from "react-hook-form";
-import { FaStar, FaArrowLeft } from "react-icons/fa";
-import { Slide, Fade } from "react-awesome-reveal";
+import { FaStar, FaArrowLeft, FaSave, FaUtensils } from "react-icons/fa";
+import { motion } from "framer-motion";
 import Swal from "sweetalert2";
-import useAxiosPublic from "../hooks/Axios/useAxiosPublic"; // Your custom hook
-import ComponentError from "./Errors/ComponentError"; // Your error component
+import useAxiosSecure from "../hooks/Axios/useAxiosSecure"; // ★ FIXED: Use Secure Hook
 import UniversalSpinner from "../components/LoadingAnimations/UniversalSpinner";
-import AuthBtn from "../components/Buttons/AuthBtn";
-
-const StarRating = ({ control }) => {
-  const [hover, setHover] = useState(0);
-
-  return (
-    <Controller
-      name="rating"
-      control={control}
-      rules={{ required: "A rating is required" }}
-      render={({ field }) => (
-        <div className="flex space-x-1">
-          {[...Array(5)].map((_, index) => {
-            const ratingValue = index + 1;
-            return (
-              <label key={index}>
-                <input
-                  type="radio"
-                  className="hidden"
-                  value={ratingValue}
-                  checked={field.value === ratingValue}
-                  onChange={() => field.onChange(ratingValue)}
-                />
-                <FaStar
-                  className="cursor-pointer transition-colors"
-                  color={
-                    ratingValue <= (hover || field.value || 0)
-                      ? "#ffc107"
-                      : "#e4e5e9"
-                  }
-                  size={30}
-                  onMouseEnter={() => setHover(ratingValue)}
-                  onMouseLeave={() => setHover(0)}
-                />
-              </label>
-            );
-          })}
-        </div>
-      )}
-    />
-  );
-};
+import ComponentError from "./Errors/ComponentError";
+import GeneralBtn from "../components/Buttons/GeneralBtn";
 
 const EditReview = () => {
   const { id } = useParams();
-  const axiosPublic = useAxiosPublic();
+  const axiosSecure = useAxiosSecure(); // ★ FIXED: Secure instance for protected routes
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const [hover, setHover] = useState(0);
 
   const {
     register,
     handleSubmit,
     control,
     setValue,
+    watch,
     formState: { errors },
   } = useForm();
 
+  // 1. Fetch Review Data (Securely)
   const {
     data: review,
     isLoading,
@@ -74,11 +36,12 @@ const EditReview = () => {
   } = useQuery({
     queryKey: ["review", id],
     queryFn: async () => {
-      const res = await axiosPublic.get(`/reviews/${id}`);
+      const res = await axiosSecure.get(`/reviews/${id}`); // Changed to secure for consistency
       return res.data;
     },
   });
 
+  // 2. Pre-fill form when data loads
   useEffect(() => {
     if (review) {
       setValue("foodName", review.foodName);
@@ -90,187 +53,197 @@ const EditReview = () => {
     }
   }, [review, setValue]);
 
+  // 3. Update Mutation
   const updateMutation = useMutation({
-    mutationFn: (updatedReview) =>
-      axiosPublic.patch(`/reviews/${id}`, updatedReview),
+    mutationFn: async (updatedReview) => {
+      // Backend expects integer for rating
+      updatedReview.rating = parseInt(updatedReview.rating, 10);
+      const res = await axiosSecure.patch(`/reviews/${id}`, updatedReview);
+      return res.data;
+    },
     onSuccess: (res) => {
-      if (res.data.modifiedCount > 0) {
+      if (res.modifiedCount > 0) {
         Swal.fire({
           icon: "success",
           title: "Updated!",
-          text: "Your review has been successfully updated.",
+          text: "Your review has been polished.",
           timer: 1500,
           showConfirmButton: false,
+          confirmButtonColor: "#d96c4e",
+        }).then(() => {
+          queryClient.invalidateQueries(["my_reviews"]);
+          navigate("/dashboard/my-reviews"); // ★ FIXED: Redirects correctly
         });
-        queryClient.invalidateQueries(["my_reviews"]);
-        navigate("/my-reviews");
       } else {
         Swal.fire({
           icon: "info",
           title: "No Changes",
           text: "You didn't change anything.",
-        });
-        navigate("/my-reviews");
+          confirmButtonColor: "#d96c4e",
+        }).then(() => navigate("/dashboard/my-reviews"));
       }
     },
     onError: (err) => {
       Swal.fire({
         icon: "error",
         title: "Oops...",
-        text: `Something went wrong: ${err.message}`,
+        text: err.message,
       });
     },
   });
+
   const onSubmit = (data) => {
-    const updatedData = { ...data, rating: parseInt(data.rating, 10) };
-    updateMutation.mutate(updatedData);
+    updateMutation.mutate(data);
   };
 
   if (isLoading) return <UniversalSpinner />;
   if (isError) return <ComponentError error={error} refetch={refetch} />;
 
   return (
-    <section className="py-12 lg:py-20 bg-base-100">
-      <title>{`Edit ${review.foodName} Review - TasteTribe`}</title>
-      <div className="container mx-auto px-4">
-        <div className="max-w-3xl mx-auto bg-base-100 p-8 lg:p-12 rounded-2xl shadow-2xl">
-          <Slide direction="down" triggerOnce>
-            <div className="text-center mb-10">
-              <h1 className="text-4xl font-bold text-secondary">
-                Edit Your Review
-              </h1>
-              <p className="mt-2 text-base-content/70">
-                Make changes to your review for{" "}
-                <span className="font-bold text-gradient">
-                  {review.foodName}
-                </span>
-                .
-              </p>
-            </div>
-          </Slide>
+    <div className="min-h-screen py-12 px-4 font-sans">
+      <title>Edit Review - TasteTribe</title>
 
-          <Fade direction="up" delay={200} triggerOnce>
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-medium text-base-content mb-1">
-                    Food Name
-                  </label>
-                  <input
-                    type="text"
-                    className="input w-full focus:ring-2 focus:ring-[#d96c4e]"
-                    {...register("foodName", {
-                      required: "Food name is required",
-                    })}
-                  />
-                  {errors.foodName && (
-                    <p className="text-red-500 text-xs mt-1">
-                      {errors.foodName.message}
-                    </p>
-                  )}
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-base-content mb-1">
-                    Food Image URL
-                  </label>
-                  <input
-                    type="url"
-                    className="input w-full focus:ring-2 focus:ring-[#d96c4e]"
-                    {...register("foodImage", {
-                      required: "Image URL is required",
-                    })}
-                  />
-                  {errors.foodImage && (
-                    <p className="text-red-500 text-xs mt-1">
-                      {errors.foodImage.message}
-                    </p>
-                  )}
-                </div>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-medium text-base-content mb-1">
-                    Restaurant Name
-                  </label>
-                  <input
-                    type="text"
-                    className="input w-full focus:ring-2 focus:ring-[#d96c4e]"
-                    {...register("restaurantName", {
-                      required: "Restaurant name is required",
-                    })}
-                  />
-                  {errors.restaurantName && (
-                    <p className="text-red-500 text-xs mt-1">
-                      {errors.restaurantName.message}
-                    </p>
-                  )}
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-base-content mb-1">
-                    Restaurant Location
-                  </label>
-                  <input
-                    type="text"
-                    className="input w-full focus:ring-2 focus:ring-[#d96c4e]"
-                    {...register("location", {
-                      required: "Location is required",
-                    })}
-                  />
-                  {errors.location && (
-                    <p className="text-red-500 text-xs mt-1">
-                      {errors.location.message}
-                    </p>
-                  )}
-                </div>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-base-content mb-2">
-                  Your Rating
-                </label>
-                <StarRating control={control} />
-                {errors.rating && (
-                  <p className="text-red-500 text-xs mt-1">
-                    {errors.rating.message}
-                  </p>
-                )}
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-base-content mb-1">
-                  Your Review
-                </label>
-                <textarea
-                  className="textarea w-full h-32 focus:ring-2 focus:ring-[#d96c4e]"
-                  {...register("reviewText", {
-                    required: "Review text is required",
-                  })}
-                ></textarea>
-                {errors.reviewText && (
-                  <p className="text-red-500 text-xs mt-1">
-                    {errors.reviewText.message}
-                  </p>
-                )}
-              </div>
-
-              <div className="flex flex-col-reverse justify-between sm:flex-row gap-4 pt-4">
-                <button
-                  type="button"
-                  onClick={() => navigate("/my-reviews")}
-                  className="btn text-primary-content custom-gradient w-full sm:w-auto"
-                >
-                  <FaArrowLeft /> Cancel
-                </button>
-                <AuthBtn>
-                  <div type="submit" disabled={updateMutation.isPending}>
-                    {updateMutation.isPending ? "Saving..." : "Save Changes"}
-                  </div>
-                </AuthBtn>
-              </div>
-            </form>
-          </Fade>
+      <div className="max-w-4xl mx-auto">
+        {/* Header */}
+        <div className="text-center mb-12">
+          <span className="text-primary font-bold uppercase tracking-widest text-sm">
+            Refine Your Taste
+          </span>
+          <h1 className="text-4xl md:text-5xl font-black text-secondary mt-2 mb-2">
+            Edit <span className="text-gradient">Review</span>
+          </h1>
+          <p className="text-xl text-base-content/60">
+            Updating: {review.foodName}
+          </p>
         </div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-base-100 p-8 md:p-12 rounded-[3rem] shadow-xl border border-base-200"
+        >
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+            {/* Rating Section (Centered) */}
+            <div className="flex flex-col items-center justify-center space-y-4 py-6 bg-base-200/50 rounded-3xl border-2 border-dashed border-base-300">
+              <label className="text-sm font-bold uppercase tracking-widest text-base-content/40">
+                Adjust Rating
+              </label>
+              <Controller
+                name="rating"
+                control={control}
+                rules={{ required: true }}
+                render={({ field }) => (
+                  <div className="flex gap-2">
+                    {[...Array(5)].map((_, index) => {
+                      const ratingValue = index + 1;
+                      return (
+                        <label
+                          key={index}
+                          className="cursor-pointer transition-transform hover:scale-110"
+                        >
+                          <input
+                            type="radio"
+                            className="hidden"
+                            value={ratingValue}
+                            onClick={() => field.onChange(ratingValue)}
+                          />
+                          <FaStar
+                            size={40}
+                            className="transition-colors duration-200"
+                            color={
+                              ratingValue <= (hover || field.value)
+                                ? "#fbbf24"
+                                : "#e5e7eb"
+                            }
+                            onMouseEnter={() => setHover(ratingValue)}
+                            onMouseLeave={() => setHover(0)}
+                          />
+                        </label>
+                      );
+                    })}
+                  </div>
+                )}
+              />
+              {errors.rating && (
+                <span className="text-error font-bold">Rating is required</span>
+              )}
+            </div>
+
+            {/* Form Grid */}
+            <div className="grid md:grid-cols-2 gap-8">
+              <div className="form-control">
+                <label className="label font-bold text-secondary">
+                  Dish Name
+                </label>
+                <input
+                  type="text"
+                  className="input input-lg bg-base-200 rounded-2xl focus:bg-base-100 transition-all font-bold text-secondary"
+                  {...register("foodName", { required: "Required" })}
+                />
+              </div>
+              <div className="form-control">
+                <label className="label font-bold text-secondary">
+                  Photo URL
+                </label>
+                <input
+                  type="url"
+                  className="input input-lg bg-base-200 rounded-2xl focus:bg-base-100 transition-all"
+                  {...register("foodImage", { required: "Required" })}
+                />
+              </div>
+              <div className="form-control">
+                <label className="label font-bold text-secondary">
+                  Restaurant
+                </label>
+                <input
+                  type="text"
+                  className="input input-lg bg-base-200 rounded-2xl focus:bg-base-100 transition-all"
+                  {...register("restaurantName", { required: "Required" })}
+                />
+              </div>
+              <div className="form-control">
+                <label className="label font-bold text-secondary">
+                  Location
+                </label>
+                <input
+                  type="text"
+                  className="input input-lg bg-base-200 rounded-2xl focus:bg-base-100 transition-all"
+                  {...register("location", { required: "Required" })}
+                />
+              </div>
+            </div>
+
+            <div className="form-control">
+              <label className="label font-bold text-secondary">
+                Your Review
+              </label>
+              <textarea
+                className="textarea w-full textarea-lg h-40 bg-base-200 rounded-3xl focus:bg-base-100 transition-all p-6 text-lg leading-relaxed"
+                {...register("reviewText", { required: "Required" })}
+              ></textarea>
+            </div>
+
+            {/* Actions */}
+            <div className="flex flex-col-reverse md:flex-row justify-between items-center gap-4 pt-6 border-t border-base-200">
+              {/* ★ FIXED: Cancel button explicitly navigates back to My Reviews */}
+              <button
+                type="button"
+                onClick={() => navigate("/dashboard/my-reviews")}
+                className="btn btn-ghost rounded-full text-base-content/60 hover:bg-base-200 gap-2 pl-2"
+              >
+                <FaArrowLeft /> Cancel
+              </button>
+
+              <div className="w-full md:w-auto">
+                <GeneralBtn type="submit" disabled={updateMutation.isPending}>
+                  {updateMutation.isPending ? "Updating..." : "Save Changes"}
+                </GeneralBtn>
+              </div>
+            </div>
+          </form>
+        </motion.div>
       </div>
-    </section>
+    </div>
   );
 };
 

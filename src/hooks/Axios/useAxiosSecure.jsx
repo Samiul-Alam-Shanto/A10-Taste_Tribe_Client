@@ -1,24 +1,52 @@
 import axios from "axios";
-import useAuth from "../useAuth";
 import { useEffect } from "react";
+import { useNavigate } from "react-router";
+import useAuth from "../useAuth";
 
-const instance = axios.create({
+const axiosSecure = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
 });
 
 const useAxiosSecure = () => {
-  const { user } = useAuth();
+  const { user, logOut } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const requestInterceptor = instance.interceptors.request.use((config) => {
-      config.headers.Authorization = `Bearer ${user.accessToken}`;
+    const requestInterceptor = axiosSecure.interceptors.request.use(
+      async (config) => {
+        if (user) {
+          const token = await user.getIdToken();
+          config.headers.Authorization = `Bearer ${token}`;
+        }
+        return config;
+      },
+      (error) => {
+        return Promise.reject(error);
+      }
+    );
 
-      return config;
-    });
-    return instance.interceptors.request.eject(requestInterceptor);
-  }, [user]);
+    const responseInterceptor = axiosSecure.interceptors.response.use(
+      (response) => {
+        return response;
+      },
+      async (error) => {
+        if (
+          error.response &&
+          (error.response.status === 401 || error.response.status === 403)
+        ) {
+          await logOut();
+          navigate("/login");
+        }
+        return Promise.reject(error);
+      }
+    );
+    return () => {
+      axiosSecure.interceptors.request.eject(requestInterceptor);
+      axiosSecure.interceptors.response.eject(responseInterceptor);
+    };
+  }, [user, logOut, navigate]);
 
-  return instance;
+  return axiosSecure;
 };
 
 export default useAxiosSecure;
